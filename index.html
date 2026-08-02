@@ -575,7 +575,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
           <li>PDF report export</li>
           <li>Ad-free experience</li>
         </ul>
-        <button class="btn-upgrade-select" onclick="unlockPremium('premium')">Get Premium</button>
+        <button class="btn-upgrade-select" onclick="initiatePayment('premium')">Get Premium</button>
       </div>
       <div class="pricing-tier popular">
         <div class="tier-badge">Best Value</div>
@@ -590,10 +590,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
           <li>MBTI × Bazi cross-analysis</li>
           <li>Priority support</li>
         </ul>
-        <button class="btn-upgrade-select" onclick="unlockPremium('pro')">Get Pro</button>
+        <button class="btn-upgrade-select" onclick="initiatePayment('pro')">Get Pro</button>
       </div>
     </div>
-    <p class="payment-note">🔒 Secure payment via Stripe · Instant access · 30-day money-back guarantee<br>This is a demo — no actual payment is processed. Click to simulate unlock.</p>
+    <p class="payment-note">🔒 Secure payment via Lemon Squeezy · Instant access · 30-day money-back guarantee<br>Taxes (VAT/GST) automatically calculated at checkout based on your country.</p>
   </div>
 </div>
 
@@ -608,7 +608,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <h3>Data Storage</h3>
     <p>Your reading results are stored locally in your browser's localStorage. Clearing your browser data will remove all saved information. We do not use cookies for tracking.</p>
     <h3>Third-Party Services</h3>
-    <p>This app does not share your data with any third party. Payment processing (when available) is handled by Stripe, which has its own privacy policy.</p>
+    <p>This app does not share your data with any third party. Payment processing is handled by Lemon Squeezy (our Merchant of Record), which acts as the legal seller and has its own privacy policy. Lemon Squeezy collects billing information necessary to process your order and comply with global tax regulations.</p>
     <h3>Your Rights</h3>
     <p>You have the right to access, correct, or delete your data at any time by clearing your browser storage. For GDPR/CCPA inquiries, contact us at the email below.</p>
     <h3>Contact</h3>
@@ -1364,6 +1364,98 @@ function resetApp(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// ===== PAYMENT CONFIG (Lemon Squeezy — MoR) =====
+// 接入步骤（注册 Lemon Squeezy 后）：
+// 1. 在 Lemon Squeezy 后台创建两个产品/变体：Premium $9.99、Pro $19.99
+// 2. 每个变体都有 "Checkout URL"，复制后填到下面 premiumUrl / proUrl
+// 3. 把 enabled 改为 true
+// 4.（可选安全验证）部署 verify-checkout.js 到 Cloudflare Workers，把地址填到 verifyUrl
+var PAYMENT_CONFIG={
+  enabled:false,                 // 填好链接后改为 true 启用真实支付
+  provider:'Lemon Squeezy',
+  premiumUrl:'',                 // 例: https://yourstore.lemonsqueezy.com/checkout/buy/xxxxxxxx-xxxx
+  proUrl:'',                     // 例: https://yourstore.lemonsqueezy.com/checkout/buy/yyyyyyyy-yyyy
+  verifyUrl:''                   // 例: https://bazi-verify.workers.dev  (留空=仅前端验证)
+};
+
+// 发起支付：跳转到 Lemon Squeezy 托管结账页
+function initiatePayment(plan){
+  // 支付前保存当前表单，回跳后可无缝恢复
+  try{
+    var fd={date:document.getElementById('birthDate').value,
+            hour:document.getElementById('birthHour').value,
+            gender:document.querySelector('input[name="gender"]:checked')?document.querySelector('input[name="gender"]:checked').value:'male',
+            name:document.getElementById('userName').value};
+    if(fd.date) localStorage.setItem('cd_pending_form',JSON.stringify(fd));
+    localStorage.setItem('cd_pending_plan',plan);
+  }catch(e){}
+
+  var baseUrl=plan==='premium'?PAYMENT_CONFIG.premiumUrl:PAYMENT_CONFIG.proUrl;
+  // 未配置 → 回退到演示模式（模拟解锁，站点照常可用）
+  if(!PAYMENT_CONFIG.enabled||!baseUrl){
+    alert('Payment is not configured yet.\n\nThis site is running in DEMO mode — your unlock will be simulated.\n\nTo enable real payments via Lemon Squeezy, fill in PAYMENT_CONFIG at the top of the script (premiumUrl / proUrl) and set enabled=true.');
+    unlockPremium(plan);
+    alert(plan==='pro'?'🎉 Pro unlocked (demo)! All features are now available.':'🎉 Premium unlocked (demo)! Da Yun and Monthly features are now available.');
+    return;
+  }
+  // 构造回跳地址（付款成功后跳回本页并带参数）
+  var returnUrl=location.origin+location.pathname+'?payment=success&plan='+plan;
+  var sep=baseUrl.indexOf('?')>=0?'&':'?';
+  // Lemon Squeezy 用 checkout[success_url] 指定成功跳转地址
+  var checkoutUrl=baseUrl+sep+'checkout[success_url]='+encodeURIComponent(returnUrl);
+  window.location.href=checkoutUrl;
+}
+
+// 回跳处理：检测付款成功参数 → 解锁 → 恢复表单
+function handlePaymentReturn(){
+  var params=new URLSearchParams(location.search);
+  if(params.get('payment')!=='success') return;
+  var plan=params.get('plan');
+  if(plan!=='premium'&&plan!=='pro'){ history.replaceState({},document.title,location.pathname); return; }
+
+  var checkoutId=params.get('checkout_id')||params.get('order_id')||params.get('reference')||'';
+
+  var doUnlock=function(){
+    unlockPremium(plan);
+    try{localStorage.removeItem('cd_pending_plan')}catch(e){}
+    // 清理 URL 参数
+    history.replaceState({},document.title,location.pathname);
+    // 恢复表单并自动重新生成报告
+    restoreFormAndRender();
+    // 弹出成功提示
+    setTimeout(function(){
+      alert(plan==='pro'?'🎉 Payment successful! Pro unlocked — all features are now available.':
+                         '🎉 Payment successful! Premium unlocked — Da Yun and Monthly features are now available.');
+    },3200);
+  };
+
+  if(PAYMENT_CONFIG.verifyUrl&&checkoutId){
+    // 服务端验证（推荐生产环境使用）
+    fetch(PAYMENT_CONFIG.verifyUrl+'?checkout_id='+encodeURIComponent(checkoutId)+'&plan='+plan)
+      .then(function(r){return r.json()})
+      .then(function(d){ if(d.valid){doUnlock()}else{alert('Payment verification failed. Please contact support with your order ID: '+checkoutId)} })
+      .catch(function(){ doUnlock() }); // 验证服务异常时降级为信任回跳
+  }else{
+    doUnlock(); // 仅前端验证（适合早期，建议后续加 verifyUrl）
+  }
+}
+
+// 恢复支付前保存的表单并重新生成报告
+function restoreFormAndRender(){
+  try{
+    var raw=localStorage.getItem('cd_pending_form');
+    if(!raw) return;
+    var fd=JSON.parse(raw);
+    if(fd.date) document.getElementById('birthDate').value=fd.date;
+    if(fd.hour!==undefined) document.getElementById('birthHour').value=fd.hour;
+    if(fd.gender==='female') document.getElementById('genderF').checked=true; else document.getElementById('genderM').checked=true;
+    if(fd.name) document.getElementById('userName').value=fd.name;
+    localStorage.removeItem('cd_pending_form');
+    // 自动提交表单重新生成报告
+    document.getElementById('birthForm').dispatchEvent(new Event('submit'));
+  }catch(e){}
+}
+
 // ===== PREMIUM / PAYWALL SYSTEM =====
 var USER_PLAN=(function(){try{return localStorage.getItem('cd_plan')||'free'}catch(e){return 'free'}})();
 function isPremium(feature){
@@ -1391,7 +1483,6 @@ function unlockPremium(plan){
   if(window._lastBazi){
     renderReport(window._lastBazi.bazi,window._lastBazi.analysis,window._lastBazi.name);
   }
-  alert(plan==='pro'?'🎉 Pro unlocked! All features are now available.':'🎉 Premium unlocked! Da Yun and Monthly features are now available.');
 }
 function showUpgrade(){document.getElementById('upgradeModal').classList.add('show')}
 function showPrivacy(){document.getElementById('privacyModal').classList.add('show')}
@@ -1788,6 +1879,9 @@ if(USER_PLAN!=='free'){
 document.querySelectorAll('.upgrade-modal,.privacy-modal').forEach(function(m){
   m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('show')});
 });
+
+// Handle return from payment provider (Lemon Squeezy success redirect)
+handlePaymentReturn();
 
 const canvas=document.getElementById('stars');
 const ctx=canvas.getContext('2d');
