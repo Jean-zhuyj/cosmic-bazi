@@ -167,6 +167,46 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .compat-track{height:8px;background:rgba(0,0,0,.3);border-radius:4px;overflow:hidden}
 .compat-fill{height:100%;border-radius:4px;transition:width 1s ease}
 
+/* ===== YEARLY FORTUNE ===== */
+.year-card{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.year-card.current{border-color:var(--gold-dim);box-shadow:0 0 20px rgba(212,175,55,.08)}
+.year-card.next{border-color:rgba(138,43,226,.4)}
+.year-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem}
+.year-title{font-size:1.3rem;font-weight:600;color:var(--gold-light);display:flex;align-items:center;gap:.6rem}
+.year-badge{font-size:.65rem;padding:.2rem .6rem;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.year-badge.now{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#1a1a1a}
+.year-badge.next{background:rgba(138,43,226,.3);color:#c8a8ff}
+.year-stem-branch{font-size:.8rem;color:var(--text-dim)}
+.year-stem-branch .sb-char{font-size:1.1rem;color:var(--gold-light);font-weight:600;margin:0 .15rem}
+.score-section{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.score-gauge{position:relative;width:110px;height:110px;flex-shrink:0}
+.score-gauge svg{transform:rotate(-90deg)}
+.score-gauge .score-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:8}
+.score-gauge .score-fg{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease}
+.score-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.score-num{font-size:1.8rem;font-weight:700;color:var(--gold-light);line-height:1}
+.score-label{font-size:.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.score-desc{flex:1;min-width:200px}
+.score-desc h4{font-size:1rem;color:var(--gold-light);margin-bottom:.4rem}
+.score-desc p{font-size:.82rem;color:var(--text-dim);line-height:1.5}
+.season-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.2rem}
+.season-item{text-align:center;padding:.8rem .4rem;background:rgba(0,0,0,.2);border-radius:10px;border:1px solid var(--border)}
+.season-icon{font-size:1.2rem;margin-bottom:.3rem}
+.season-name{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+.season-score{font-size:1rem;font-weight:600;color:var(--gold-light)}
+.season-bar{height:4px;background:rgba(0,0,0,.3);border-radius:2px;margin-top:.4rem;overflow:hidden}
+.season-bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
+.year-areas{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+.year-area{padding:1rem;background:rgba(0,0,0,.15);border-radius:10px;border-left:3px solid var(--gold-dim)}
+.year-area.wealth{border-left-color:#FFD700}
+.year-area.career{border-left-color:#4FC3F7}
+.year-area.love{border-left-color:#FF6B9D}
+.year-area.health{border-left-color:#66BB6A}
+.year-area h5{font-size:.85rem;color:var(--gold-light);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.year-area p{font-size:.78rem;color:var(--text-dim);line-height:1.5}
+.year-tip{margin-top:1rem;padding:.8rem 1rem;background:rgba(212,175,55,.06);border-radius:10px;border:1px solid rgba(212,175,55,.15);font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.year-tip strong{color:var(--gold-light)}
+
 .actions{display:flex;gap:1rem;justify-content:center;margin-top:2rem;flex-wrap:wrap}
 .btn-action{padding:.8rem 1.8rem;background:var(--card);border:1px solid var(--border-bright);border-radius:12px;color:var(--gold-light);cursor:pointer;font-family:'Inter',sans-serif;font-size:.9rem;transition:all .3s;font-weight:500}
 .btn-action:hover{background:rgba(212,175,55,.1);transform:translateY(-2px)}
@@ -181,6 +221,9 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
   .result-header h2{font-size:1.3rem}
   .report-card{padding:1.5rem}
   .tab-btn{padding:.5rem .8rem;font-size:.8rem}
+  .year-areas{grid-template-columns:1fr}
+  .season-grid{grid-template-columns:repeat(2,1fr)}
+  .score-section{flex-direction:column;text-align:center;align-items:center}
 }
 @media print{
   body::before,#stars{display:none}
@@ -341,6 +384,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <button class="tab-btn" data-tab="wealth">Wealth</button>
     <button class="tab-btn" data-tab="health">Health</button>
     <button class="tab-btn" data-tab="lucky">Lucky Elements</button>
+    <button class="tab-btn" data-tab="yearly">Yearly Fortune</button>
   </div>
 
   <!-- Tab Contents -->
@@ -569,6 +613,258 @@ const COMPATIBILITY={
   water:{best:['metal','wood'],challenging:['earth','fire']}
 };
 
+// ===== YEARLY FORTUNE ENGINE =====
+// Element relationships: generating cycle, controlling cycle
+// genTo: what this element generates; genBy: what generates this element
+// ctrlTo: what this element controls; ctrlBy: what controls this element
+const EL_RELATIONS={
+  wood:{genTo:'fire',genBy:'water',ctrlTo:'earth',ctrlBy:'metal'},
+  fire:{genTo:'earth',genBy:'wood',ctrlTo:'metal',ctrlBy:'water'},
+  earth:{genTo:'metal',genBy:'fire',ctrlTo:'water',ctrlBy:'wood'},
+  metal:{genTo:'water',genBy:'earth',ctrlTo:'wood',ctrlBy:'fire'},
+  water:{genTo:'wood',genBy:'metal',ctrlTo:'fire',ctrlBy:'earth'}
+};
+
+// Determine relationship between year element and day master
+// Returns: 'favorable' (year feeds you), 'wealth' (you control year), 
+//          'power' (year controls you), 'draining' (you feed year), 'same' (same element)
+function getYearRelation(dayMaster,yearEl){
+  if(dayMaster===yearEl) return 'same';
+  if(EL_RELATIONS[dayMaster].genBy===yearEl) return 'favorable';
+  if(EL_RELATIONS[dayMaster].ctrlTo===yearEl) return 'wealth';
+  if(EL_RELATIONS[dayMaster].ctrlBy===yearEl) return 'power';
+  if(EL_RELATIONS[dayMaster].genTo===yearEl) return 'draining';
+  return 'neutral';
+}
+
+const RELATION_DATA={
+  favorable:{
+    label:'Favorable Year',color:'#4CAF50',
+    desc:'The year\'s energy nourishes and supports your Day Master. This is a year of growth, opportunity, and smooth progress. Things tend to fall into place when you take action.',
+    scoreBase:78,scoreRange:15
+  },
+  wealth:{
+    label:'Wealth Year',color:'#FFD700',
+    desc:'The year\'s energy represents your wealth element. Financial opportunities, career advancement, and material gains are highlighted. Your efforts translate directly into tangible rewards.',
+    scoreBase:72,scoreRange:15
+  },
+  power:{
+    label:'Challenge Year',color:'#FF5252',
+    desc:'The year\'s energy challenges your Day Master. Expect obstacles, pressure, and tests of character. This is not a year for reckless moves — strategy and patience are your allies. Growth comes through adversity.',
+    scoreBase:48,scoreRange:12
+  },
+  draining:{
+    label:'Output Year',color:'#FF9800',
+    desc:'The year\'s energy draws from your Day Master. Your focus shifts to giving, creating, and输出. While creatively fulfilling, you must guard against burnout. Channel your energy into productive projects rather than scattered efforts.',
+    scoreBase:55,scoreRange:12
+  },
+  same:{
+    label:'Competition Year',color:'#9C27B0',
+    desc:'The year\'s energy mirrors your Day Master. Expect heightened intensity — both opportunities and competition increase. Self-awareness is key; your strengths are amplified but so are your weaknesses. Balance is everything.',
+    scoreBase:60,scoreRange:12
+  },
+  neutral:{
+    label:'Transitional Year',color:'#78909C',
+    desc:'The year\'s energy has a neutral relationship with your Day Master. This is a year of steady maintenance rather than dramatic change. Focus on building foundations and preparing for more dynamic years ahead.',
+    scoreBase:62,scoreRange:10
+  }
+};
+
+// Area-specific fortune texts by relation type
+const AREA_FORTUNE={
+  favorable:{
+    career:'Promotion opportunities and recognition are likely. Your ideas gain traction and leadership notices your contributions. Network actively — doors open for you this year.',
+    wealth:'Income growth and favorable investment timing. New revenue streams may emerge. Your financial decisions tend to work out well — trust your instincts but still do your homework.',
+    love:'Harmony and deepening connections. Singles may meet someone significant; couples find renewed intimacy. Social events bring meaningful encounters.',
+    health:'Vitality is strong this year. Your body recovers quickly from stress. Maintain your wellness routine and enjoy active pursuits. Spring and summer are particularly energizing.'
+  },
+  wealth:{
+    career:'Your hard work translates into concrete rewards. Salary negotiations, business deals, and project completions favor you. Focus on delivering measurable results.',
+    wealth:'This is a peak financial year. Opportunities for significant income increases, successful investments, or asset acquisition are highlighted. Be bold but calculated — the universe rewards your courage.',
+    love:'Relationships are practical and grounded this year. You may invest in shared assets or make long-term commitments with your partner. Financial compatibility becomes important.',
+    health:'Generally stable, but the pursuit of wealth can lead to overwork. Schedule rest deliberately. Don\'t trade health for money — you\'ll need both for the long game.'
+  },
+  power:{
+    career:'Expect increased scrutiny, pressure, or authority figures testing you. Stay composed and document your work. This year builds resilience and character. Avoid office politics — let your results speak.',
+    wealth:'Financial caution is essential. Avoid speculative investments and large unnecessary expenses. Focus on preserving capital rather than growing it aggressively. Insurance and risk management matter.',
+    love:'Relationships face tests. Communication breakdowns or power struggles may arise. Practice patience and avoid controlling behavior. Couples who weather this year together emerge stronger.',
+    health:'Stress-related issues are the main concern. The pressure you feel mentally manifests physically — headaches, tension, digestive issues. Prioritize stress management: meditation, exercise, and adequate sleep.'
+  },
+  draining:{
+    career:'You\'ll be busy and productive, but recognition may lag behind effort. Focus on building systems and creating outputs that will pay off later. Teaching, mentoring, and content creation are favored.',
+    wealth:'Money flows out as you invest in projects, education, or others. This is not a year for hoarding — strategic spending on growth pays dividends later. Avoid impulsive purchases though.',
+    love:'You give a lot to your relationships this year. Ensure it\'s reciprocated. Creative dates and shared projects deepen bonds. Singles may attract people who need your help — discern between genuine connection and emotional drain.',
+    health:'Energy depletion is the key risk. You\'re outputting more than you\'re receiving. Prioritize nutrition, hydration, and sleep. Schedule mandatory rest days. Supplement with adaptogens if needed.'
+  },
+  same:{
+    career:'Competition intensifies in your field. Your skills are tested and refined. Stand out by leaning into your unique strengths rather than competing on others\' terms. Collaborate with same-element peers.',
+    wealth:'Financial situation is volatile — both gains and losses are amplified. Diversify your portfolio to manage risk. Avoid putting all eggs in one basket. Your natural element strength can work for or against you.',
+    love:'Relationships are passionate but potentially volatile. Intensity is high — both positive and negative. Channel this energy into shared adventures rather than conflicts. Self-awareness prevents unnecessary drama.',
+    health:'Your element is doubled, amplifying both vitality and vulnerability. Your sensitive organs need extra care. Balance your dominant element with complementary elements — diet, exercise, and environment should counterbalance.'
+  },
+  neutral:{
+    career:'A steady, uneventful year professionally. Use this stability to build skills, update your resume, and plan your next move. Quiet progress now sets up future breakthroughs.',
+    wealth:'Finances are stable without dramatic shifts. Maintain your current strategy. This is a good year for financial education and long-term planning rather than active trading.',
+    love:'Relationships are calm and predictable. If single, you may not meet someone life-changing, but existing connections deepen quietly. Couples enjoy peaceful companionship. Use this lull to strengthen foundations.',
+    health:'Health is generally stable. Maintain your routines. This is an ideal year to establish new healthy habits — they\'ll stick. Annual check-ups are particularly worthwhile now.'
+  }
+};
+
+// Seasonal fortune modifiers (spring=wood, summer=fire, autumn=metal, winter=water)
+const SEASONS=[
+  {name:'Spring',icon:'🌸',el:'wood',months:'Feb–Apr'},
+  {name:'Summer',icon:'☀️',el:'fire',months:'May–Jul'},
+  {name:'Autumn',icon:'🍂',el:'metal',months:'Aug–Oct'},
+  {name:'Winter',icon:'❄️',el:'water',months:'Nov–Jan'}
+];
+
+function calcYearPillar(year){
+  const yearStem=(year-4)%10;
+  const yearBranch=(year-4)%12;
+  return{stem:STEMS[yearStem],branch:BRANCHES[yearBranch]};
+}
+
+function calcSeasonScore(dayMaster,seasonEl,relation){
+  let base=60;
+  // Season element relationship with day master
+  const sRel=getYearRelation(dayMaster,seasonEl);
+  if(sRel==='favorable') base+=20;
+  else if(sRel==='wealth') base+=12;
+  else if(sRel==='power') base-=18;
+  else if(sRel==='draining') base-=8;
+  else if(sRel==='same') base+=5;
+  // Overall year relation modifier
+  if(relation==='favorable') base+=8;
+  else if(relation==='wealth') base+=5;
+  else if(relation==='power') base-=5;
+  return Math.max(30,Math.min(95,base+Math.floor(Math.random()*8-4)));
+}
+
+function renderYearlyFortune(bazi,analysis){
+  const now=new Date();
+  const currentYear=now.getFullYear();
+  const nextYear=currentYear+1;
+  const dayMaster=analysis.dayMaster;
+  
+  const curYP=calcYearPillar(currentYear);
+  const nextYP=calcYearPillar(nextYear);
+  const curEl=curYP.stem.el;
+  const nextEl=nextYP.stem.el;
+  const curRel=getYearRelation(dayMaster,curEl);
+  const nextRel=getYearRelation(dayMaster,nextEl);
+  const curData=RELATION_DATA[curRel];
+  const nextData=RELATION_DATA[nextRel];
+  
+  // Generate scores
+  const curScore=curData.scoreBase+Math.floor(Math.random()*curData.scoreRange);
+  const nextScore=nextData.scoreBase+Math.floor(Math.random()*nextData.scoreRange);
+  
+  // Seasonal scores
+  const curSeasons=SEASONS.map(s=>({
+    ...s,
+    score:calcSeasonScore(dayMaster,s.el,curRel)
+  }));
+  const nextSeasons=SEASONS.map(s=>({
+    ...s,
+    score:calcSeasonScore(dayMaster,s.el,nextRel)
+  }));
+  
+  function buildYearCard(yp,rel,data,score,seasons,areas,isCurrent){
+    const circumference=2*Math.PI*45;
+    const dashOffset=circumference*(1-score/100);
+    const seasonColors={wood:'#4CAF50',fire:'#FF6B35',metal:'#C0C0C0',water:'#3B82F6'};
+    
+    const seasonHTML=seasons.map(s=>`
+      <div class="season-item">
+        <div class="season-icon">${s.icon}</div>
+        <div class="season-name">${s.name}</div>
+        <div class="season-score" style="color:${s.score>=70?'#4CAF50':s.score>=50?'#FFD700':'#FF5252'}">${s.score}</div>
+        <div class="season-bar"><div class="season-bar-fill" style="background:${seasonColors[s.el]};width:0" data-w="${s.score}"></div></div>
+      </div>
+    `).join('');
+    
+    return `
+      <div class="year-card ${isCurrent?'current':'next'}">
+        <div class="year-header">
+          <div>
+            <div class="year-title">
+              ${isCurrent?'📅':'🔮'} ${yp.stem.en} ${yp.branch.en} Year
+              <span class="year-badge ${isCurrent?'now':'next'}">${isCurrent?'Current Year':'Next Year'}</span>
+            </div>
+            <div class="year-stem-branch">
+              <span class="sb-char">${yp.stem.ch}</span><span class="sb-char">${yp.branch.ch}</span> · ${yp.branch.animal} Year · ${EL_EN[yp.stem.el]} Element
+            </div>
+          </div>
+        </div>
+        
+        <div class="score-section">
+          <div class="score-gauge">
+            <svg width="110" height="110">
+              <circle class="score-bg" cx="55" cy="55" r="45"/>
+              <circle class="score-fg" cx="55" cy="55" r="45" stroke="${data.color}"
+                stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" data-offset="${dashOffset}"/>
+            </svg>
+            <div class="score-center">
+              <div class="score-num" style="color:${data.color}">${score}</div>
+              <div class="score-label">Overall</div>
+            </div>
+          </div>
+          <div class="score-desc">
+            <h4 style="color:${data.color}">${data.label}</h4>
+            <p>${data.desc}</p>
+          </div>
+        </div>
+        
+        <div class="season-grid">${seasonHTML}</div>
+        
+        <div class="year-areas">
+          <div class="year-area career">
+            <h5>💼 Career</h5>
+            <p>${areas.career}</p>
+          </div>
+          <div class="year-area wealth">
+            <h5>💰 Wealth</h5>
+            <p>${areas.wealth}</p>
+          </div>
+          <div class="year-area love">
+            <h5>❤️ Love</h5>
+            <p>${areas.love}</p>
+          </div>
+          <div class="year-area health">
+            <h5>🏥 Health</h5>
+            <p>${areas.health}</p>
+          </div>
+        </div>
+        
+        <div class="year-tip">
+          <strong>💡 Key Advice:</strong> ${
+            rel==='favorable'?'This is your year to take bold steps. Launch that project, ask for the raise, make the move. The wind is at your back — set your sails.':
+            rel==='wealth'?'Focus on converting your skills into tangible value. Negotiate, invest, and build assets. Your financial instincts are sharp this year — trust them.':
+            rel==='power'?'Play the long game. Conserve energy, build resilience, and avoid unnecessary confrontations. Every challenge this year is forging you for greater things ahead.':
+            rel==='draining'?'Create, teach, and build — but pace yourself. Your output matters, but so does your wellbeing. Set boundaries and refill your well regularly.':
+            rel==='same'?'Double down on what makes you unique. Competition is fierce, but no one can be you. Channel intensity into mastery rather than comparison.':
+            'Use this stable year to build foundations. Learn, plan, and prepare. The seeds you plant now will bloom when more dynamic years arrive.'
+          }
+        </div>
+      </div>
+    `;
+  }
+  
+  const curAreas=AREA_FORTUNE[curRel];
+  const nextAreas=AREA_FORTUNE[nextRel];
+  
+  return `
+    <div class="tab-content" data-tab="yearly">
+      <div class="report-card">
+        <h3><span class="icon">🔮</span> Yearly Fortune Forecast</h3>
+        <p>Your annual fortune is determined by the interaction between your Day Master (<span class="highlight">${bazi.day.stem.enEl}</span>) and the Heavenly Stem element of each year. When the year's element supports you, opportunities flow; when it challenges you, growth comes through overcoming obstacles.</p>
+      </div>
+      ${buildYearCard(curYP,curRel,curData,curScore,curSeasons,curAreas,true)}
+      ${buildYearCard(nextYP,nextRel,nextData,nextScore,nextSeasons,nextAreas,false)}
+    </div>
+  `;
+}
+
 // ===== RENDER FUNCTIONS =====
 function renderPillars(bazi){
   const el=document.getElementById('pillarsDisplay');
@@ -721,11 +1017,20 @@ function renderReport(bazi,analysis,name){
         <p style="margin-top:1rem">Your <span class="highlight">favorable element</span> for growth is <span class="highlight">${EL_ICON[analysis.genCycle[analysis.dayMaster]]} ${EL_EN[analysis.genCycle[analysis.dayMaster]]}</span> — the element that feeds and nourishes your Day Master. Incorporating this element amplifies your natural strengths.</p>
       </div>
     </div>
+    ${renderYearlyFortune(bazi,analysis)}
   `;
 
   // Animate compatibility bars
   setTimeout(()=>{
     document.querySelectorAll('.compat-fill').forEach(b=>{b.style.width=b.dataset.w+'%'});
+    // Animate yearly fortune score gauges
+    document.querySelectorAll('.score-fg').forEach(c=>{
+      c.style.strokeDashoffset=c.dataset.offset;
+    });
+    // Animate season bars
+    document.querySelectorAll('.season-bar-fill').forEach(b=>{
+      b.style.width=b.dataset.w+'%';
+    });
   },200);
 }
 
