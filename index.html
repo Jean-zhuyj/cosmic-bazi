@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Destiny — Bazi Fortune Reading</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root{
+  --bg-1:#0a0a1a;--bg-2:#12122a;--bg-3:#1a1a3e;
+  --gold:#d4af37;--gold-light:#f0d878;--gold-dim:#8a7220;
+  --purple:#6a4c93;--purple-light:#9b7bc4;
+  --text:#e8e6f0;--text-dim:#9a98b0;--text-bright:#fff;
+  --card:rgba(255,255,255,.04);--card-hover:rgba(255,255,255,.07);
+  --border:rgba(212,175,55,.15);--border-bright:rgba(212,175,55,.35);
+  --wood:#4CAF50;--fire:#FF6B35;--earth:#D4A04C;--metal:#C0C0C0;--water:#3B82F6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg-1);color:var(--text);min-height:100vh;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 20% 30%,rgba(106,76,147,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 70%,rgba(212,175,55,.08) 0%,transparent 50%);z-index:0;pointer-events:none}
+#stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* ===== INPUT SCREEN ===== */
+.input-screen{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem}
+.input-card{max-width:560px;width:100%;background:linear-gradient(145deg,rgba(26,26,62,.8),rgba(18,18,42,.9));border:1px solid var(--border);border-radius:24px;padding:3rem 2.5rem;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(106,76,147,.15)}
+.logo{text-align:center;margin-bottom:.5rem}
+.logo-icon{font-size:3rem;display:inline-block;filter:drop-shadow(0 0 20px var(--gold-dim))}
+.logo h1{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;letter-spacing:.05em;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.5rem 0 .25rem}
+.logo p{color:var(--text-dim);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:1.5rem 0}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:.8rem;color:var(--text-dim);margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase;font-weight:500}
+.form-group input,.form-group select{width:100%;padding:.85rem 1rem;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;color:var(--text-bright);font-family:'Inter',sans-serif;font-size:1rem;transition:all .3s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.1)}
+.form-group select{cursor:pointer}
+.form-group select option{background:var(--bg-2)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.gender-options{display:flex;gap:1rem}
+.gender-option{flex:1;position:relative}
+.gender-option input{position:absolute;opacity:0}
+.gender-option label{display:block;text-align:center;padding:.85rem;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .3s;font-size:.9rem;text-transform:none;letter-spacing:0;margin:0;color:var(--text)}
+.gender-option input:checked+label{border-color:var(--gold);background:rgba(212,175,55,.1);color:var(--gold-light)}
+.btn-reveal{width:100%;padding:1.1rem;margin-top:.5rem;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:12px;color:#1a1a1a;font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.btn-reveal:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,175,55,.3)}
+.btn-reveal:active{transform:translateY(0)}
+.disclaimer{text-align:center;margin-top:1.25rem;font-size:.75rem;color:var(--text-dim);line-height:1.6}
+
+/* ===== LOADING ===== */
+.loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-1);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.orbit{width:120px;height:120px;position:relative;margin-bottom:2rem}
+.orbit-core{width:20px;height:20px;background:var(--gold);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 30px var(--gold)}
+.orbit-ring{position:absolute;top:50%;left:50%;border:1px solid var(--border-bright);border-radius:50%;transform:translate(-50%,-50%);animation:spin 2s linear infinite}
+.orbit-ring:nth-child(2){width:50px;height:50px}
+.orbit-ring:nth-child(3){width:80px;height:80px;animation-duration:3s;animation-direction:reverse}
+.orbit-ring:nth-child(4){width:110px;height:110px;animation-duration:4s}
+.orbit-ring::after{content:'';position:absolute;top:-3px;left:50%;width:6px;height:6px;background:var(--gold-light);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 10px var(--gold)}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.loading-text{font-family:'Cinzel',serif;color:var(--gold);letter-spacing:.15em;font-size:.9rem;animation:fade .8s ease-in-out infinite alternate}
+@keyframes fade{to{opacity:.4}}
+
+/* ===== RESULT SCREEN ===== */
+.result-screen{position:relative;z-index:1;display:none;padding:2rem 1rem 4rem;max-width:900px;margin:0 auto}
+.result-screen.active{display:block;animation:fadeUp .6s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}}
+.result-header{text-align:center;margin-bottom:2rem}
+.result-header h2{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--gold-light);margin-bottom:.5rem}
+.result-header p{color:var(--text-dim);font-size:.9rem}
+.pillars-display{display:flex;justify-content:center;gap:1rem;margin:2rem 0;flex-wrap:wrap}
+.pillar{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem .75rem;text-align:center;min-width:90px;transition:all .3s}
+.pillar:hover{border-color:var(--border-bright);transform:translateY(-4px)}
+.pillar-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.pillar-stem,.pillar-branch{font-family:'Cinzel',serif;font-size:1.4rem;margin:.25rem 0}
+.pillar-stem{color:var(--gold-light)}
+.pillar-branch{color:var(--purple-light)}
+.pillar-element{font-size:.65rem;color:var(--text-dim);margin-top:.5rem;text-transform:uppercase}
+
+/* Element Wheel */
+.element-section{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.5rem}
+.element-section h3{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1.1rem;margin-bottom:1.5rem;text-align:center;letter-spacing:.05em}
+.element-bars{display:flex;flex-direction:column;gap:.75rem;max-width:500px;margin:0 auto}
+.element-bar{display:flex;align-items:center;gap:1rem}
+.element-bar-label{width:80px;font-size:.85rem;font-weight:500;text-align:right}
+.element-bar-track{flex:1;height:24px;background:rgba(0,0,0,.3);border-radius:12px;overflow:hidden;position:relative}
+.element-bar-fill{height:100%;border-radius:12px;transition:width 1s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:.5rem;font-size:.7rem;color:rgba(255,255,255,.9);font-weight:600}
+.element-bar-value{width:30px;font-size:.85rem;color:var(--text-dim);text-align:left}
+
+/* Tabs */
+.tab-nav{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center}
+.tab-btn{padding:.6rem 1.2rem;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text-dim);cursor:pointer;font-size:.85rem;transition:all .3s;font-family:'Inter',sans-serif;font-weight:500}
+.tab-btn:hover{color:var(--text);border-color:var(--border-bright)}
+.tab-btn.active{background:rgba(212,175,55,.1);border-color:var(--gold);color:var(--gold-light)}
+.tab-content{display:none;animation:fadeUp .4s ease}
+.tab-content.active{display:block}
+
+/* Report Cards */
+.report-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.5rem;transition:all .3s}
+.report-card:hover{border-color:var(--border-bright)}
+.report-card h3{font-family:'Cinzel',serif;font-size:1.15rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.report-card .icon{font-size:1.3rem}
+.report-card p{line-height:1.8;color:var(--text);font-size:.92rem;margin-bottom:1rem}
+.report-card p:last-child{margin-bottom:0}
+.report-card .highlight{color:var(--gold-light);font-weight:500}
+.report-card strong{color:var(--text-bright)}
+.report-card ul{list-style:none;padding-left:0;margin:.5rem 0}
+.report-card ul li{padding:.35rem 0 .35rem 1.5rem;position:relative;line-height:1.7;font-size:.9rem}
+.report-card ul li::before{content:'✦';position:absolute;left:0;color:var(--gold-dim)}
+
+.archetype-badge{display:inline-block;padding:.4rem 1rem;background:rgba(212,175,55,.1);border:1px solid var(--gold-dim);border-radius:20px;font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold-light);margin-bottom:1rem}
+
+.lucky-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-top:1rem}
+.lucky-item{text-align:center;padding:1rem;background:rgba(0,0,0,.2);border-radius:12px;border:1px solid var(--border)}
+.lucky-item .lucky-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.lucky-item .lucky-value{font-size:.95rem;color:var(--gold-light);font-weight:500}
+
+.compatibility-bar{margin:.75rem 0}
+.compat-header{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.3rem}
+.compat-track{height:8px;background:rgba(0,0,0,.3);border-radius:4px;overflow:hidden}
+.compat-fill{height:100%;border-radius:4px;transition:width 1s ease}
+
+.actions{display:flex;gap:1rem;justify-content:center;margin-top:2rem;flex-wrap:wrap}
+.btn-action{padding:.8rem 1.8rem;background:var(--card);border:1px solid var(--border-bright);border-radius:12px;color:var(--gold-light);cursor:pointer;font-family:'Inter',sans-serif;font-size:.9rem;transition:all .3s;font-weight:500}
+.btn-action:hover{background:rgba(212,175,55,.1);transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#1a1a1a;border:none;font-weight:600}
+
+@media(max-width:640px){
+  .input-card{padding:2rem 1.5rem}
+  .form-row{grid-template-columns:1fr}
+  .pillars-display{gap:.5rem}
+  .pillar{min-width:70px;padding:1rem .5rem}
+  .pillar-stem,.pillar-branch{font-size:1.1rem}
+  .result-header h2{font-size:1.3rem}
+  .report-card{padding:1.5rem}
+  .tab-btn{padding:.5rem .8rem;font-size:.8rem}
+}
+@media print{
+  body::before,#stars{display:none}
+  body{background:#fff;color:#000}
+  .tab-nav,.actions{display:none}
+  .tab-content{display:block!important}
+  .report-card{break-inside:avoid;border-color:#ccc}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- ===== INPUT SCREEN ===== -->
+<div class="input-screen" id="inputScreen">
+  <div class="input-card">
+    <div class="logo">
+      <span class="logo-icon">☯</span>
+      <h1>Cosmic Destiny</h1>
+      <p>Discover Your Bazi Fortune</p>
+    </div>
+    <div class="divider"></div>
+    <form id="birthForm">
+      <div class="form-group">
+        <label>Your Name (Optional)</label>
+        <input type="text" id="userName" placeholder="Enter your name" maxlength="30">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Birth Date</label>
+          <input type="date" id="birthDate" required max="2026-12-31" min="1900-01-01">
+        </div>
+        <div class="form-group">
+          <label>Birth Time</label>
+          <select id="birthHour" required>
+            <option value="">Select time</option>
+            <option value="0">11 PM – 1 AM (Zi)</option>
+            <option value="1">1 AM – 3 AM (Chou)</option>
+            <option value="2">3 AM – 5 AM (Yin)</option>
+            <option value="3">5 AM – 7 AM (Mao)</option>
+            <option value="4">7 AM – 9 AM (Chen)</option>
+            <option value="5">9 AM – 11 AM (Si)</option>
+            <option value="6">11 AM – 1 PM (Wu)</option>
+            <option value="7">1 PM – 3 PM (Wei)</option>
+            <option value="8">3 PM – 5 PM (Shen)</option>
+            <option value="9">5 PM – 7 PM (You)</option>
+            <option value="10">7 PM – 9 PM (Xu)</option>
+            <option value="11">9 PM – 11 PM (Hai)</option>
+            <option value="-1">Unknown / Not Sure</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Gender</label>
+        <div class="gender-options">
+          <div class="gender-option">
+            <input type="radio" id="genderM" name="gender" value="male" checked>
+            <label for="genderM">Male</label>
+          </div>
+          <div class="gender-option">
+            <input type="radio" id="genderF" name="gender" value="female">
+            <label for="genderF">Female</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn-reveal">Reveal My Destiny</button>
+    </form>
+    <p class="disclaimer">
+      Based on traditional Chinese Bazi (Four Pillars of Destiny) astrology.<br>
+      For entertainment and self-reflection purposes.
+    </p>
+  </div>
+</div>
+
+<!-- ===== LOADING ===== -->
+<div class="loading-screen" id="loadingScreen" style="display:none;">
+  <div class="orbit">
+    <div class="orbit-ring"></div>
+    <div class="orbit-ring"></div>
+    <div class="orbit-ring"></div>
+    <div class="orbit-core"></div>
+  </div>
+  <p class="loading-text">Aligning the cosmos...</p>
+</div>
+
+<!-- ===== RESULT SCREEN ===== -->
+<div class="result-screen" id="resultScreen">
+  <div class="result-header">
+    <h2 id="resultTitle">Your Cosmic Blueprint</h2>
+    <p id="resultSubtitle"></p>
+  </div>
+
+  <!-- Four Pillars -->
+  <div class="pillars-display" id="pillarsDisplay"></div>
+
+  <!-- Element Distribution -->
+  <div class="element-section">
+    <h3>✦ Elemental Balance ✦</h3>
+    <div class="element-bars" id="elementBars"></div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="personality">Personality</button>
+    <button class="tab-btn" data-tab="career">Career</button>
+    <button class="tab-btn" data-tab="love">Love</button>
+    <button class="tab-btn" data-tab="wealth">Wealth</button>
+    <button class="tab-btn" data-tab="health">Health</button>
+    <button class="tab-btn" data-tab="lucky">Lucky Elements</button>
+  </div>
+
+  <!-- Tab Contents -->
+  <div id="tabContent"></div>
+
+  <div class="actions">
+    <button class="btn-action" onclick="window.print()">Print Report</button>
+    <button class="btn-action btn-primary" onclick="resetApp()">New Reading</button>
+  </div>
+</div>
+
+<script>
+// ===== BAZI ENGINE =====
+const STEMS = [
+  {ch:'甲',en:'Jia',el:'wood',yin:'yang',enEl:'Yang Wood'},
+  {ch:'乙',en:'Yi',el:'wood',yin:'yin',enEl:'Yin Wood'},
+  {ch:'丙',en:'Bing',el:'fire',yin:'yang',enEl:'Yang Fire'},
+  {ch:'丁',en:'Ding',el:'fire',yin:'yin',enEl:'Yin Fire'},
+  {ch:'戊',en:'Wu',el:'earth',yin:'yang',enEl:'Yang Earth'},
+  {ch:'己',en:'Ji',el:'earth',yin:'yin',enEl:'Yin Earth'},
+  {ch:'庚',en:'Geng',el:'metal',yin:'yang',enEl:'Yang Metal'},
+  {ch:'辛',en:'Xin',el:'metal',yin:'yin',enEl:'Yin Metal'},
+  {ch:'壬',en:'Ren',el:'water',yin:'yang',enEl:'Yang Water'},
+  {ch:'癸',en:'Gui',el:'water',yin:'yin',enEl:'Yin Water'}
+];
+const BRANCHES = [
+  {ch:'子',en:'Zi',el:'water',animal:'Rat',yin:'yang'},
+  {ch:'丑',en:'Chou',el:'earth',animal:'Ox',yin:'yin'},
+  {ch:'寅',en:'Yin',el:'wood',animal:'Tiger',yin:'yang'},
+  {ch:'卯',en:'Mao',el:'wood',animal:'Rabbit',yin:'yin'},
+  {ch:'辰',en:'Chen',el:'earth',animal:'Dragon',yin:'yang'},
+  {ch:'巳',en:'Si',el:'fire',animal:'Snake',yin:'yin'},
+  {ch:'午',en:'Wu',el:'fire',animal:'Horse',yin:'yang'},
+  {ch:'未',en:'Wei',el:'earth',animal:'Goat',yin:'yin'},
+  {ch:'申',en:'Shen',el:'metal',animal:'Monkey',yin:'yang'},
+  {ch:'酉',en:'You',el:'metal',animal:'Rooster',yin:'yin'},
+  {ch:'戌',en:'Xu',el:'earth',animal:'Dog',yin:'yang'},
+  {ch:'亥',en:'Hai',el:'water',animal:'Pig',yin:'yin'}
+];
+const EL_EN = {wood:'Wood',fire:'Fire',earth:'Earth',metal:'Metal',water:'Water'};
+const EL_COLOR = {wood:'#4CAF50',fire:'#FF6B35',earth:'#D4A04C',metal:'#C0C0C0',water:'#3B82F6'};
+const EL_ICON = {wood:'🌿',fire:'🔥',earth:'🏔️',metal:'⚔️',water:'🌊'};
+
+// Solar term approx dates (day of month for each month's boundary)
+const SOLAR_TERM_DATES = [6,4,6,5,6,7,8,8,8,8,7,7]; // ~start of each solar month
+
+function getJulianDayNum(y,m,d){
+  if(m<=2){y--;m+=12}
+  const A=Math.floor(y/100);
+  const B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524;
+}
+
+function calcBazi(date,hourIdx){
+  const y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+  // --- Year Pillar (立春 ~Feb 4 as boundary) ---
+  let yearForCalc=y;
+  if(m===1||(m===2&&d<SOLAR_TERM_DATES[1])) yearForCalc=y-1;
+  const yearStem=(yearForCalc-4)%10;
+  const yearBranch=(yearForCalc-4)%12;
+  // --- Month Pillar ---
+  let monthBranchIdx;
+  if(m===2&&d>=SOLAR_TERM_DATES[1]) monthBranchIdx=2;
+  else if(m===3&&d<SOLAR_TERM_DATES[2]) monthBranchIdx=2;
+  else if(m===3) monthBranchIdx=3;
+  else if(m===4&&d<SOLAR_TERM_DATES[3]) monthBranchIdx=3;
+  else monthBranchIdx=(m+1)%12; // simplified
+  if(m===1) monthBranchIdx=(d>=SOLAR_TERM_DATES[0])?2:1;
+  // Month stem (五虎遁元)
+  const monthStemStart=[2,4,6,8,0,2,4,6,8,0]; // index by yearStem%5
+  const monthStem=(monthStemStart[yearStem%5]+monthBranchIdx)%10;
+  // --- Day Pillar (JDN) ---
+  const jdn=getJulianDayNum(y,m,d);
+  const daySB=((jdn+49)%60+60)%60;
+  const dayStem=daySB%10;
+  const dayBranch=daySB%12;
+  // --- Hour Pillar ---
+  let hourStem=0,hourBranch=0;
+  const hasHour=hourIdx>=0;
+  if(hasHour){
+    hourBranch=hourIdx;
+    const hourStemStart=[0,2,4,6,8]; // 五鼠遁元, index by dayStem%5
+    hourStem=(hourStemStart[dayStem%5]+hourIdx)%10;
+  }
+  return {
+    year:{stem:STEMS[yearStem],branch:BRANCHES[yearBranch]},
+    month:{stem:STEMS[monthStem],branch:BRANCHES[monthBranchIdx]},
+    day:{stem:STEMS[dayStem],branch:BRANCHES[dayBranch]},
+    hour:hasHour?{stem:STEMS[hourStem],branch:BRANCHES[hourBranch]}:null,
+    hasHour
+  };
+}
+
+function analyzeElements(bazi){
+  const count={wood:0,fire:0,earth:0,metal:0,water:0};
+  const pillars=[bazi.year,bazi.month,bazi.day];
+  if(bazi.hour) pillars.push(bazi.hour);
+  pillars.forEach(p=>{
+    count[p.stem.el]++;
+    count[p.branch.el]++;
+  });
+  // Seasonal strength from month branch
+  const seasonEl=bazi.month.branch.el;
+  count[seasonEl]+=0.5;
+  const total=Object.values(count).reduce((a,b)=>a+b,0);
+  const pct={};
+  for(let k in count) pct[k]=Math.round(count[k]/total*100);
+  // Day master
+  const dayMaster=bazi.day.stem.el;
+  const dayMasterYin=bazi.day.stem.yin;
+  // Favorable elements (simplified: balance the chart)
+  const sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]);
+  const strongest=sorted[0][0];
+  const weakest=sorted[sorted.length-1][0];
+  // Generating cycle: wood→fire→earth→metal→water→wood
+  const genCycle={wood:'fire',fire:'earth',earth:'metal',metal:'water',water:'wood'};
+  // Controlling cycle: wood→earth, earth→water, water→fire, fire→metal, metal→wood
+  const ctrlCycle={wood:'earth',earth:'water',water:'fire',fire:'metal',metal:'wood'};
+  return{count,pct,dayMaster,dayMasterYin,strongest,weakest,genCycle,ctrlCycle,seasonEl};
+}
+
+// ===== REPORT CONTENT =====
+const PROFILES={
+  wood:{
+    archetype:'The Eternal Tree',
+    archetypeDesc:'Rooted yet reaching, you grow steadily toward the light.',
+    personality:`You are <span class="highlight">creative, compassionate, and growth-oriented</span> — like a tree that bends in the storm but never breaks. You have a natural gift for seeing potential in situations and people that others overlook. Your mind expands constantly, always seeking new knowledge and understanding.<br><br>Your shadow side includes <strong>stubbornness</strong> (which is really persistence in disguise) and a tendency to spread yourself too thin. When stressed, you may become rigid like a dried branch. Remember: even the mightiest oak was once a flexible sapling.<br><br>You deeply value <strong>authenticity and personal growth</strong>. Superficial connections drain you, while meaningful conversations energize you. People are drawn to your calm wisdom and your ability to nurture without smothering.`,
+    career:`Your ideal career path involves <span class="highlight">growth, development, and nurturing</span>. You excel in roles where you can help things — or people — flourish.<br><br><strong>Best-fit fields:</strong><ul><li>Education, training, and mentoring</li><li>Healthcare, therapy, and counseling</li><li>Environmental and sustainability work</li><li>Creative arts, writing, and design</li><li>Agriculture, botany, and natural sciences</li><li>Human resources and organizational development</li></ul>You work best in environments that value <strong>long-term vision</strong> over quick wins. You're not built for cutthroat competition — you thrive where collaboration and patient cultivation are rewarded. Your leadership style is inclusive and developmental; people grow under your guidance.<br><br>Your career may not peak early, but it <span class="highlight">compounds over time</span>. Each year adds rings to your trunk, making you more valuable and respected.`,
+    love:`In love, you are <span class="highlight">nurturing, loyal, and deeply devoted</span>. You don't fall in love casually — when you commit, you commit fully, like roots gripping the earth.<br><br>You seek a partner who shares your values of <strong>growth, honesty, and emotional depth</strong>. Physical attraction matters less to you than intellectual and spiritual connection. You need someone who can grow alongside you, not someone who wants to keep you small.<br><br><strong>In relationships:</strong><ul><li>You show love through acts of care and growth — cooking, gardening, creating a warm home</li><li>You need personal space to recharge; don't feel guilty about this</li><li>You can become controlling when anxious — practice trusting your partner</li><li>Your ideal match brings fire (passion) or earth (stability) to your life</li></ul>Your biggest relationship lesson: <span class="highlight">allow yourself to be cared for, not just to care for others</span>.`,
+    wealth:`Your wealth grows like a tree — <span class="highlight">slowly, steadily, and with deep roots</span>. You are not designed for get-rich-quick schemes; your financial strength lies in patient, strategic accumulation.<br><br><strong>Wealth strategy:</strong><ul><li>Invest in education, skills, and personal development — these pay compound returns for you</li><li>Real estate and land investments are naturally favorable</li><li>Sustainable and green industries align with your energy</li><li>Avoid high-leverage gambling or speculative trading</li><li>Build multiple income streams over time rather than betting on one</li></ul>Your relationship with money is healthy when you view it as <strong>seed capital for growth</strong> rather than status. You're most prosperous when your work serves a meaningful purpose. When your career aligns with your values, money flows naturally.<br><br>Your <span class="highlight">wealth decade</span> typically arrives after age 35, when your roots are deep enough to bear fruit.`,
+    health:`Your sensitive organs are the <span class="highlight">liver and gallbladder</span>. In Chinese medicine, Wood energy governs the liver — your body's primary detoxification organ.<br><br><strong>Health guidance:</strong><ul><li>Manage anger and frustration — suppressed anger damages your liver</li><li>Prioritize sleep before 11 PM (liver detoxification time in TCM)</li><li>Outdoor activities, hiking, and forest bathing are your medicine</li><li>Stretching and yoga keep your Wood energy flexible</li><li>Limit alcohol and processed foods — your liver is sensitive</li><li>Green leafy vegetables and sour foods support your element</li></ul>Your body thrives on <strong>movement and nature</strong>. Sedentary indoor lifestyles are your biggest health risk. Even a daily walk in a park can rebalance your energy. When you feel stuck physically, you feel stuck emotionally — move your body to move your mind.<br><br>Watch for signs of <span class="highlight">Wood stagnation</span>: tension headaches, tight jaw, irritability, and digestive issues after stress.`
+  },
+  fire:{
+    archetype:'The Radiant Flame',
+    archetypeDesc:'You illuminate every room, burning bright with passion and purpose.',
+    personality:`You are <span class="highlight">passionate, charismatic, and visionary</span> — a natural light that others are drawn to. Your energy is infectious; when you walk into a room, the temperature rises. You think fast, speak fast, and act fast, often inspiring others to keep up with your pace.<br><br>Your gift is <strong>inspiration</strong>. You see possibilities before others do and have the enthusiasm to make them believe. You're a natural performer, teacher, or leader — anywhere your warmth can reach others.<br><br>Your shadow side includes <strong>impulsiveness</strong>, burnout, and a tendency to start more fires than you can tend. You can be emotionally volatile when your energy is blocked. The lesson for Fire types: <span class="highlight">a candle illuminates; a wildfire destroys</span>. Learn to control your flame.<br><br>You deeply value <strong>excitement, recognition, and meaning</strong>. Routine and monotony are your enemies. You need to feel that what you do matters on a grand scale.`,
+    career:`Your ideal career involves <span class="highlight">leadership, visibility, and inspiration</span>. You are not meant to work quietly in the background — your fire needs an audience.<br><br><strong>Best-fit fields:</strong><ul><li>Leadership, executive, and entrepreneurial roles</li><li>Entertainment, media, and public speaking</li><li>Marketing, branding, and creative direction</li><li>Technology and innovation — you love the cutting edge</li><li>Teaching, coaching, and motivational work</li><li>Hospitality, events, and experience design</li></ul>You excel in <strong>fast-paced, high-energy environments</strong> where your quick thinking and charisma are assets. You're the person who rallies the team when morale is low. However, you may struggle with detail-oriented, repetitive tasks — delegate those.<br><br>Your career trajectory tends to be <span class="highlight">explosive rather than linear</span>. You may have dramatic jumps — sudden promotions, career pivots, or entrepreneurial leaps. Your biggest challenge is sustaining momentum after the initial spark.<br><br>Partner with Earth types (for stability) or Metal types (for execution) to balance your fire.`,
+    love:`In love, you are <span class="highlight">intense, generous, and magnificently romantic</span>. You don't do anything halfway — your affections are grand, your gestures are bold, and your passion burns hot.<br><br>You need a partner who can <strong>match your intensity</strong> without being consumed by it. You're attracted to confidence, ambition, and a certain spark of mischief. Boredom is your relationship kryptonite.<br><br><strong>In relationships:</strong><ul><li>You express love through grand gestures, excitement, and adventure</li><li>You need constant stimulation — plan dates, surprises, new experiences</li><li>You can be jealous or possessive when you feel your flame dimming</li><li>Your ideal match brings water (emotional depth) or earth (grounding)</li></ul>Your greatest love lesson: <span class="highlight">true passion isn't just the spark — it's keeping the fire burning through ordinary days</span>. Learn to find excitement in small, quiet moments, not just dramatic ones.<br><br>When you find the right person, your loyalty and warmth create a love story others envy.`,
+    wealth:`Your wealth comes in <span class="highlight">bursts of inspiration and bold moves</span>. You're the type who can spot an opportunity before anyone else and have the courage to act on it.<br><br><strong>Wealth strategy:</strong><ul><li>Leverage your personal brand — your visibility is your biggest asset</li><li>Invest in innovative tech, media, and trending industries</li><li>Your best deals come from networking and social connections</li><li>Set strict stop-losses — your impulsiveness can lead to overbetting</li><li>Partner with a financial advisor who can temper your boldness</li><li>Create passive income through content, courses, or IP</li></ul>Your relationship with money is tied to <strong>excitement and recognition</strong>. You're most prosperous when you're visible and passionate about what you do. Money follows your enthusiasm.<br><br>The danger: <span class="highlight">burning through cash as fast as you earn it</span>. Fire types are generous to a fault and prone to lifestyle inflation. Build a financial firewall — automatic savings and investment plans that don't require your daily attention.<br><br>Your <span class="highlight">wealth peak</span> often comes through a single big break — a viral moment, a successful exit, or a high-profile position.`,
+    health:`Your sensitive organs are the <span class="highlight">heart and small intestine</span>. Fire energy governs the cardiovascular system and blood circulation.<br><br><strong>Health guidance:</strong><ul><li>Manage stress — chronic anxiety directly impacts your heart</li><li>Cardiovascular exercise is essential, but avoid overexertion</li><li>Avoid excessive caffeine and stimulants — you're already high-energy</li><li>Practice meditation or mindfulness to cool your inner flame</li><li>Red foods (berries, tomatoes, goji) support your element</li><li>Bitter foods (dark chocolate, leafy greens) help balance Fire</li></ul>Your body runs hot — you may experience <strong>inflammation, high blood pressure, or anxiety</strong> when your Fire is excessive. The key health practice for you is <span class="highlight">cooling and grounding</span>: swimming, evening walks, cool baths, and calming teas.<br><br>Your biggest health risk is <strong>burnout</strong>. Fire types push hard until they crash. Schedule mandatory rest periods. You're not a machine — even the sun sets every evening.<br><br>Sleep is your reset button: aim for 7-8 hours, and avoid screens before bed.`
+  },
+  earth:{
+    archetype:'The Mountain Guardian',
+    archetypeDesc:'Steady, reliable, and immovable — you are the foundation others build upon.',
+    personality:`You are <span class="highlight">stable, dependable, and deeply grounded</span>. Like a mountain, you don't move for passing storms. Your presence brings calm to chaotic situations, and people naturally trust you with their secrets, their problems, and their futures.<br><br>Your gift is <strong>reliability</strong>. In a world of uncertainty, you are the constant. You follow through, you show up, and you do what you say. This makes you invaluable in both personal and professional relationships.<br><br>Your shadow side includes <strong>stubbornness, resistance to change, and worry</strong>. You can get stuck in your ways, refusing to adapt even when the old way no longer works. Your tendency to overthink can lead to analysis paralysis. The lesson: <span class="highlight">mountains don't move, but they also don't grow</span>. Sometimes you need to be soil instead — fertile and open to change.<br><br>You deeply value <strong>security, tradition, and meaningful relationships</strong>. You're not interested in chasing the latest trend; you want what lasts. Quality over quantity, always.`,
+    career:`Your ideal career involves <span class="highlight">structure, stability, and trust</span>. You are the person organizations rely on to keep things running smoothly.<br><br><strong>Best-fit fields:</strong><ul><li>Real estate, property management, and land development</li><li>Banking, insurance, and risk management</li><li>Law, compliance, and regulatory affairs</li><li>Consulting, auditing, and quality assurance</li><li>Agriculture, food, and natural resources</li><li>Government, administration, and public service</li><li>Architecture and construction</li></ul>You excel in roles that require <strong>patience, thoroughness, and long-term thinking</strong>. You're not a startup gambler — you're a fortress builder. Your career grows steadily, with each year adding a layer of credibility and expertise.<br><br>Your leadership style is <span class="highlight">paternal/maternal and protective</span>. You take care of your team like family. People feel safe under your management, which makes you excellent at retaining talent.<br><br>Your challenge: <strong>embrace calculated risks</strong>. The world rewards adaptability. Sometimes the best way to protect what you have is to evolve before you're forced to.`,
+    love:`In love, you are <span class="highlight">loyal, devoted, and incredibly stable</span>. You're the rock in your relationship — the person your partner can always count on, no matter what.<br><br>You seek a partner who values <strong>commitment, home, and family</strong> as much as you do. You're not interested in flings or casual dating; you're looking for a life partner. Physical chemistry matters, but emotional security matters more.<br><br><strong>In relationships:</strong><ul><li>You show love through reliability — being there, every time, without fail</li><li>You express care through practical acts: cooking, fixing, providing</li><li>You can be possessive or overly protective — practice letting go</li><li>You need explicit appreciation; don't assume your partner notices</li><li>Your ideal match brings metal (precision) or water (flow) to your life</li></ul>Your greatest relationship challenge: <span class="highlight">you can take your partner for granted</span> because you're so comfortable in routine. Remember to keep courting your partner even after years together. Plan surprises, express feelings verbally, and be willing to try new things.<br><br>When loved right, you offer the most <strong>secure, nurturing, and lasting</strong> partnership of all the elements.`,
+    wealth:`Your wealth is built on <span class="highlight">solid foundations and patient accumulation</span>. You are the tortoise in the race — slow, steady, and ultimately victorious.<br><br><strong>Wealth strategy:</strong><ul><li>Real estate is your natural wealth vehicle — land and property</li><li>Long-term, conservative investments suit your temperament</li><li>Bonds, dividend stocks, and index funds are ideal</li><li>Agriculture and food-related businesses can be lucrative</li><li>Build an emergency fund first — security fuels your confidence</li><li>Avoid speculative investments — they cause you anxiety, not profit</li></ul>Your relationship with money is <strong>pragmatic and security-oriented</strong>. You're not flashy with wealth; you prefer quiet comfort over visible luxury. A paid-off home and a full pantry give you more satisfaction than a luxury car.<br><br>Your wealth-building superpower: <span class="highlight">consistency</span>. While others chase hot tips and lose money, you steadily invest month after month. Over 20-30 years, this compounds into significant wealth.<br><br>Your challenge: <strong>don't be too conservative</strong>. Inflation erodes cash savings. Educate yourself on diversified investing, and consider working with a trusted advisor to step slightly outside your comfort zone.<br><br>Your <span class="highlight">wealth golden years</span> are typically 45-65, when your foundations have fully matured.`,
+    health:`Your sensitive organs are the <span class="highlight">spleen, stomach, and digestive system</span>. Earth energy governs digestion, nutrient absorption, and physical nourishment.<br><br><strong>Health guidance:</strong><ul><li>Eat regular, balanced meals — irregular eating damages your spleen</li><li>Avoid excessive cold or raw foods; warm, cooked foods suit you</li><li>Manage worry and overthinking — these directly impact digestion</li><li>Root vegetables, squash, and whole grains support your element</li><li>Sweet foods (in moderation: honey, dates, sweet potato) nourish Earth</li><li>Grounding exercises: hiking, gardening, barefoot walking</li></ul>Your body thrives on <strong>routine and nourishment</strong>. Irregular schedules, skipped meals, and excessive mental work without physical grounding are your biggest health risks. You may be prone to <span class="highlight">digestive issues, weight fluctuations, and fatigue</span>.<br><br>The mind-body connection for Earth types is direct: <strong>when you worry, your stomach hurts</strong>. Practice separating real problems from imagined ones. Journal, talk to trusted friends, or seek therapy — getting worries out of your head and into the open helps your digestion.<br><br>Your ideal exercise is <strong>moderate and grounding</strong>: walking, hiking, yoga, tai chi. Extreme workouts can deplete you.`
+  },
+  metal:{
+    archetype:'The Forged Blade',
+    archetypeDesc:'Precise, disciplined, and unyielding — you are refined through pressure.',
+    personality:`You are <span class="highlight">disciplined, principled, and razor-sharp</span>. Like a forged blade, you've been through fire and pressure, and you've come out stronger, more refined, and more focused. You value excellence, precision, and integrity above all else.<br><br>Your gift is <strong>clarity</strong>. You cut through confusion and see things as they truly are. You're not swayed by emotions or sweet words — you deal in facts, results, and standards. This makes you an excellent judge, evaluator, and decision-maker.<br><br>Your shadow side includes <strong>rigidity, coldness, and perfectionism</strong>. You can be overly critical — of yourself and others — holding impossibly high standards. Your sharp tongue can wound without you realizing it. The lesson: <span class="highlight">a blade that's too hard becomes brittle</span>. Flexibility is not weakness; it's resilience.<br><br>You deeply value <strong>justice, order, and quality</strong>. You respect rules and expect others to do the same. You'd rather be respected than liked, and you hold yourself to a code of honor that you never compromise.`,
+    career:`Your ideal career involves <span class="highlight">precision, structure, and high standards</span>. You excel where quality matters more than speed and where rules are meant to be followed, not bent.<br><br><strong>Best-fit fields:</strong><ul><li>Law, judiciary, and legal compliance</li><li>Finance, accounting, and auditing</li><li>Engineering, architecture, and manufacturing</li><li>Military, law enforcement, and security</li><li>Medicine, surgery, and dentistry</li><li>Jewelry, luxury goods, and high-end craftsmanship</li><li>Technology: systems architecture, QA, cybersecurity</li></ul>You excel in roles that require <strong>unbiased judgment and meticulous execution</strong>. You're the person who catches the error everyone else missed. Your colleagues may find you demanding, but they respect your standards.<br><br>Your leadership style is <span class="highlight">firm, fair, and results-driven</span>. You set clear expectations and hold people accountable. You don't do office politics — you do performance. This earns you respect, though maybe not warmth.<br><br>Your career challenge: <strong>learn to delegate</strong>. Your perfectionism makes you want to do everything yourself. But true leadership is developing others to meet your standards, not doing the work for them.<br><br>Partner with Water types (for adaptability) or Wood types (for creativity) to balance your rigidity.`,
+    love:`In love, you are <span class="highlight">principled, loyal, and quietly devoted</span>. You don't wear your heart on your sleeve — your love is expressed through commitment, protection, and acts of service.<br><br>You seek a partner who shares your <strong>values of integrity, excellence, and self-discipline</strong>. You're attracted to competence and character, not flash and charm. A messy, undisciplined partner will quickly lose your respect.<br><br><strong>In relationships:</strong><ul><li>You show love through protection, provision, and practical support</li><li>You struggle to express emotions verbally — practice saying "I love you"</li><li>You can be critical when your partner doesn't meet your standards</li><li>You need personal space and autonomy; respect this</li><li>Your ideal match brings water (emotional flow) or fire (warmth)</li></ul>Your greatest relationship challenge: <span class="highlight">softening your edges</span>. Your sharpness that serves you in career can wound in love. Practice gentleness — not lower standards, but kinder delivery. Remember that your partner is a person, not a project to perfect.<br><br>When you find someone who understands your code of honor, you offer <strong>unshakeable loyalty and fierce protection</strong>. You'll stand by your partner through any storm, a blade between them and the world.`,
+    wealth:`Your wealth comes through <span class="highlight">discipline, strategy, and precision</span>. You are the master of structured wealth-building — budgets, plans, and systematic execution.<br><br><strong>Wealth strategy:</strong><ul><li>Systematic investing: dollar-cost averaging into quality assets</li><li>Finance, banking, and precious metals are favorable sectors</li><li>You excel at spotting undervalued assets through rigorous analysis</li><li>Build wealth through expertise — become the best in your field</li><li>Avoid emotional spending; you're naturally disciplined, use it</li><li>Insurance and risk management appeal to your cautious nature</li></ul>Your relationship with money is <strong>respectful and strategic</strong>. You view wealth as a tool for security and independence, not for show. You're the type to have a detailed financial plan, and you stick to it.<br><br>Your wealth-building superpower: <span class="highlight">unmatched discipline</span>. While others panic-sell in downturns or FOMO-buy in bubbles, you stick to your plan. This alone puts you ahead of 90% of investors over time.<br><br>Your challenge: <strong>don't miss opportunities by over-analyzing</strong>. Sometimes good enough and timely beats perfect and late. Set a rule: if an opportunity passes your basic criteria, act within 48 hours.<br><br>Your <span class="highlight">wealth tends to be structural</span> — built through salary growth, systematic investing, and professional reputation rather than windfalls.`,
+    health:`Your sensitive organs are the <span class="highlight">lungs, large intestine, and respiratory system</strong>. Metal energy governs breathing, skin, and the body's defense against external pathogens.<br><br><strong>Health guidance:</strong><ul><li>Avoid smoking and air pollution — your lungs are vulnerable</li><li>Practice deep breathing and breathwork daily</li><li>Keep skin moisturized; dry skin indicates Metal imbalance</li><li>White foods (pear, garlic, onion, white radish) support your element</li><li>Pungent spices (in moderation) help clear the lungs</li><li>Regular cardio improves lung capacity and circulation</li></ul>Your body thrives on <strong>clean air, clear routines, and disciplined self-care</strong>. You may be prone to <span class="highlight">respiratory infections, allergies, skin conditions, and constipation</span> when your Metal energy is imbalanced.<br><br>The emotional component: <strong>grief and sadness</strong> are the emotions associated with Metal. If you suppress grief — from loss, disappointment, or unfulfilled expectations — it manifests as respiratory or skin issues. Allow yourself to feel and process sadness; it's not weakness, it's healing.<br><br>Your ideal exercise: <strong>structured and disciplined</strong> — martial arts, weightlifting, running, or swimming. You enjoy measurable progress and clear goals.`
+  },
+  water:{
+    archetype:'The Deep Ocean',
+    archetypeDesc:'Mysterious, adaptable, and profound — your depths hold hidden power.',
+    personality:`You are <span class="highlight">adaptable, intuitive, and deeply intelligent</span>. Like water, you can be a calm lake or a powerful river — you shape yourself to any container while never losing your essence. Your mind moves fluidly between ideas, making connections that others miss.<br><br>Your gift is <strong>wisdom and communication</strong>. You absorb information like a sponge and can articulate complex ideas with clarity and depth. You're a natural philosopher, diplomat, or artist — anywhere your inner depth can find expression.<br><br>Your shadow side includes <strong>indecision, emotional volatility, and escapism</strong>. Water has no fixed shape, and sometimes neither do you. You can be overly influenced by your environment, absorbing others' moods and losing your own center. The lesson: <span class="highlight">even the ocean has a current — find yours and stay true to it</span>.<br><br>You deeply value <strong>truth, freedom, and depth</strong>. Small talk bores you; you want to talk about ideas, dreams, and the meaning of life. You need autonomy and space to explore your inner world.`
+  }
+};
+
+// Water profile continued (split for readability)
+PROFILES.water.career=`Your ideal career involves <span class="highlight">communication, wisdom, and adaptability</span>. You thrive where ideas flow and change is constant.<br><br><strong>Best-fit fields:</strong><ul><li>Communication, writing, journalism, and media</li><li>Psychology, counseling, and therapy</li><li>Diplomacy, negotiation, and international relations</li><li>Arts, music, and creative industries</li><li>Trade, import/export, and logistics</li><li>Research, academia, and philosophy</li><li>Technology: data science, AI, and research</li></ul>You excel in roles that require <strong>emotional intelligence, adaptability, and deep thinking</strong>. You're the diplomat who resolves conflicts, the writer who captures what others feel but can't express, the researcher who dives deeper than anyone dared.<br><br>Your leadership style is <span class="highlight">fluid and inclusive</span>. You lead by listening, adapting, and flowing around obstacles rather than confronting them head-on. This makes you effective in complex, ambiguous environments where rigid leaders fail.<br><br>Your career challenge: <strong>focus and follow-through</strong>. Water spreads in all directions; you may start many projects without finishing any. Find a container — a deadline, a partner, a commitment — that channels your energy into one powerful stream.<br><br>Partner with Earth types (for grounding) or Wood types (for growth direction) to balance your fluidity.`;
+PROFILES.water.love=`In love, you are <span class="highlight">emotionally deep, romantically intuitive, and endlessly fascinating</span>. You love with your entire being — mind, body, and soul.<br><br>You seek a partner who can <strong>dive deep</strong> with you. Surface-level connections drain you. You need intellectual stimulation, emotional resonance, and a sense that your partner truly "gets" you on a level beyond words.<br><br><strong>In relationships:</strong><ul><li>You show love through deep listening, empathy, and emotional presence</li><li>You're highly intuitive — you sense your partner's needs before they speak</li><li>You can be moody or withdrawn when overwhelmed; communicate this</li><li>You need solitude to recharge; this is not rejection</li><li>Your ideal match brings earth (stability) or fire (warmth)</li></ul>Your greatest relationship challenge: <span class="highlight">maintaining boundaries</span>. Water merges with whatever it touches. You may lose yourself in your partner, absorbing their emotions and neglecting your own needs. Practice saying "I need" and "I feel" — your inner world matters too.<br><br>When you find someone who respects your depths and doesn't try to contain you, you offer <strong>a love that is profound, healing, and transformative</strong>. You don't just love someone — you understand them on a level they didn't know existed.`;
+PROFILES.water.wealth=`Your wealth flows through <span class="highlight">intelligence, communication, and adaptability</span>. Like water finding its way through any terrain, you can create wealth in any industry if you apply your mind to it.<br><br><strong>Wealth strategy:</strong><ul><li>Leverage your communication skills: writing, speaking, content</li><li>Trade, commerce, and intermediary businesses suit you</li><li>Diversified portfolios match your adaptable nature</li><li>Invest in knowledge-based industries: tech, media, education</li><li>Your intuition about markets and trends is a real asset — trust it</li><li>Avoid emotional investing; your moods can swing your decisions</li></ul>Your relationship with money is <strong>fluid and intellectual</strong>. You're not attached to material possessions; you value freedom and experiences over stuff. This can be a strength (minimal spending) or a weakness (not tracking finances).<br><br>Your wealth-building superpower: <span class="highlight">information advantage</span>. You absorb and process information faster than most. Use this to spot trends, identify opportunities, and make informed decisions. In the information age, your natural ability is increasingly valuable.<br><br>Your challenge: <strong>commitment to a single path</strong>. Water spreads thin. To build real wealth, you need to channel your diverse interests into one or two focused streams. Pick a primary wealth vehicle and commit to it for at least 5 years.<br><br>Your <span class="highlight">wealth often comes in waves</span> — periods of abundance followed by periods of flow. Build reservoirs (savings and investments) during the high tides.`;
+PROFILES.water.health=`Your sensitive organs are the <span class="highlight">kidneys, bladder, and urinary system</span>. Water energy governs the body's fluid balance, hormones, and vital essence.<br><br><strong>Health guidance:</strong><ul><li>Stay hydrated — your element demands adequate water intake</li><li>Keep your lower back warm; kidneys are sensitive to cold</li><li>Manage fear and anxiety — these emotions deplete kidney energy</li><li>Avoid excessive salt; your kidneys are already sensitive</li><li>Dark/blue foods (black beans, seaweed, berries) support Water</li><li>Swimming, tai chi, and gentle flowing movements are ideal</li><li>Prioritize sleep — your body regenerates through deep rest</li></ul>Your body thrives on <strong>flow, rest, and emotional balance</strong>. You may be prone to <span class="highlight">kidney issues, urinary infections, hormonal imbalances, lower back pain, and chronic fatigue</span> when your Water energy is depleted.<br><br>The emotional component: <strong>fear and willpower</strong> are governed by the kidneys. Chronic fear, anxiety, or lack of direction in life directly weakens your Water energy. Conversely, when your kidneys are strong, you have courage, willpower, and a sense of purpose.<br><br>Your ideal exercise: <strong>fluid and gentle</strong> — swimming, yoga, tai chi, walking near water. Extreme or rigid workouts can deplete your vital essence. Prioritize recovery and rest as much as activity.`;
+
+// ===== LUCKY ELEMENTS DATA =====
+const LUCKY_DATA={
+  wood:{colors:'Green, Teal',directions:'East, Southeast',seasons:'Spring',numbers:'3, 8',gemstones:'Jade, Emerald, Green Quartz'},
+  fire:{colors:'Red, Orange, Purple',directions:'South',seasons:'Summer',numbers:'2, 7',gemstones:'Ruby, Garnet, Red Jasper'},
+  earth:{colors:'Yellow, Brown, Beige',directions:'Center, Northeast, Southwest',seasons:'Late Summer (transitions)',numbers:'5, 0',gemstones:'Citrine, Tiger Eye, Amber'},
+  metal:{colors:'White, Silver, Gold',directions:'West, Northwest',seasons:'Autumn',numbers:'4, 9',gemstones:'Diamond, White Sapphire, Clear Quartz'},
+  water:{colors:'Blue, Black, Dark tones',directions:'North',seasons:'Winter',numbers:'1, 6',gemstones:'Sapphire, Aquamarine, Black Onyx'}
+};
+
+// ===== COMPATIBILITY DATA =====
+const COMPATIBILITY={
+  wood:{best:['water','fire'],challenging:['metal','earth']},
+  fire:{best:['wood','earth'],challenging:['water','metal']},
+  earth:{best:['fire','metal'],challenging:['wood','water']},
+  metal:{best:['earth','water'],challenging:['fire','wood']},
+  water:{best:['metal','wood'],challenging:['earth','fire']}
+};
+
+// ===== RENDER FUNCTIONS =====
+function renderPillars(bazi){
+  const el=document.getElementById('pillarsDisplay');
+  const pillarData=[
+    {label:'Year',pillar:bazi.year,meaning:'Ancestry & Social Life'},
+    {label:'Month',pillar:bazi.month,meaning:'Career & Parents'},
+    {label:'Day',pillar:bazi.day,meaning:'Self & Spouse'},
+  ];
+  if(bazi.hour) pillarData.push({label:'Hour',pillar:bazi.hour,meaning:'Children & Late Life'});
+  el.innerHTML=pillarData.map(p=>`
+    <div class="pillar">
+      <div class="pillar-label">${p.label}</div>
+      <div class="pillar-stem">${p.pillar.stem.ch}</div>
+      <div class="pillar-branch">${p.pillar.branch.ch}</div>
+      <div class="pillar-element">${EL_EN[p.pillar.stem.el]} / ${EL_EN[p.pillar.branch.el]}</div>
+    </div>
+  `).join('');
+}
+
+function renderElementBars(analysis){
+  const el=document.getElementById('elementBars');
+  const order=['wood','fire','earth','metal','water'];
+  el.innerHTML=order.map(e=>{
+    const pct=analysis.pct[e];
+    return `<div class="element-bar">
+      <div class="element-bar-label">${EL_ICON[e]} ${EL_EN[e]}</div>
+      <div class="element-bar-track">
+        <div class="element-bar-fill" style="background:${EL_COLOR[e]};width:0" data-w="${pct}">${pct}%</div>
+      </div>
+      <div class="element-bar-value">${analysis.count[e].toFixed(1)}</div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('.element-bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%'});
+  },100);
+}
+
+function renderReport(bazi,analysis,name){
+  const p=PROFILES[analysis.dayMaster];
+  const lucky=LUCKY_DATA[analysis.dayMaster];
+  const compat=COMPATIBILITY[analysis.dayMaster];
+  const zodiac=bazi.year.branch.animal;
+  const dayMasterEn=bazi.day.stem.enEl;
+
+  // Build compatibility bars
+  const allEls=['wood','fire','earth','metal','water'];
+  const compatBars=allEls.map(e=>{
+    let pct,label;
+    if(compat.best.includes(e)){pct=85+Math.floor(Math.random()*10);label='Highly Compatible'}
+    else if(compat.challenging.includes(e)){pct=35+Math.floor(Math.random()*15);label='Needs Effort'}
+    else{pct=60+Math.floor(Math.random()*15);label='Moderate'}
+    return `<div class="compatibility-bar">
+      <div class="compat-header"><span>${EL_ICON[e]} ${EL_EN[e]} Types</span><span style="color:var(--text-dim)">${label}</span></div>
+      <div class="compat-track"><div class="compat-fill" style="background:${EL_COLOR[e]};width:0" data-w="${pct}"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('tabContent').innerHTML=`
+    <!-- Personality -->
+    <div class="tab-content active" data-tab="personality">
+      <div class="report-card">
+        <h3><span class="icon">🌟</span> Your Elemental Archetype</h3>
+        <div class="archetype-badge">${p.archetype}</div>
+        <p style="font-style:italic;color:var(--text-dim)">${p.archetypeDesc}</p>
+        <p>Your Day Master is <span class="highlight">${dayMasterEn}</span>, and your Chinese Zodiac sign is the <span class="highlight">${zodiac}</span>. This combination shapes your core identity.</p>
+        ${p.personality}
+      </div>
+    </div>
+
+    <!-- Career -->
+    <div class="tab-content" data-tab="career">
+      <div class="report-card">
+        <h3><span class="icon">💼</span> Career & Professional Destiny</h3>
+        ${p.career}
+      </div>
+      <div class="report-card">
+        <h3><span class="icon">⚖️</span> Element Balance Insight</h3>
+        <p>Your strongest element is <span class="highlight">${EL_ICON[analysis.strongest]} ${EL_EN[analysis.strongest]}</span>, which amplifies your natural tendencies. Your weakest element is <span class="highlight">${EL_ICON[analysis.weakest]} ${EL_EN[analysis.weakest]}</span> — developing this area will create more balance and opportunity in your career.</p>
+        <p>The current season of your birth (<span class="highlight">${EL_EN[analysis.seasonEl]}</span> element) ${analysis.seasonEl===analysis.dayMaster?'strengthens your Day Master significantly':'influences your elemental dynamics'}.</p>
+      </div>
+    </div>
+
+    <!-- Love -->
+    <div class="tab-content" data-tab="love">
+      <div class="report-card">
+        <h3><span class="icon">❤️</span> Love & Relationships</h3>
+        ${p.love}
+      </div>
+      <div class="report-card">
+        <h3><span class="icon">🔗</span> Element Compatibility</h3>
+        <p>How your element interacts with others in relationships:</p>
+        ${compatBars}
+      </div>
+    </div>
+
+    <!-- Wealth -->
+    <div class="tab-content" data-tab="wealth">
+      <div class="report-card">
+        <h3><span class="icon">💰</span> Wealth & Financial Destiny</h3>
+        ${p.wealth}
+      </div>
+      <div class="report-card">
+        <h3><span class="icon">📊</span> Your Wealth Element</h3>
+        <p>In Bazi, your wealth element is the element that your Day Master controls. For a <span class="highlight">${dayMasterEn}</span> Day Master, your wealth element is <span class="highlight">${EL_ICON[analysis.ctrlCycle[analysis.dayMaster]]} ${EL_EN[analysis.ctrlCycle[analysis.dayMaster]]}</span>.</p>
+        <p>${analysis.pct[analysis.ctrlCycle[analysis.dayMaster]]>20?'Your wealth element is well-represented, suggesting natural financial acumen and opportunities.':'Your wealth element is relatively modest, suggesting wealth comes through deliberate effort rather than luck. Focus on building skills and systems.'}</p>
+      </div>
+    </div>
+
+    <!-- Health -->
+    <div class="tab-content" data-tab="health">
+      <div class="report-card">
+        <h3><span class="icon">🏥</span> Health & Vitality</h3>
+        ${p.health}
+      </div>
+      <div class="report-card">
+        <h3><span class="icon">🔄</span> Elemental Healing</h3>
+        <p>To balance your <span class="highlight">${EL_EN[analysis.dayMaster]}</span> energy, incorporate more <span class="highlight">${EL_ICON[analysis.weakest]} ${EL_EN[analysis.weakest]}</span> energy into your life:</p>
+        <ul>
+          <li>Wear or surround yourself with ${LUCKY_DATA[analysis.weakest].colors.toLowerCase()} colors</li>
+          <li>Spend time in ${LUCKY_DATA[analysis.weakest].directions.toLowerCase()} facing directions</li>
+          <li>Engage with ${LUCKY_DATA[analysis.weakest].seasons.toLowerCase()} seasonal energies</li>
+          <li>Carry or wear ${LUCKY_DATA[analysis.weakest].gemstones.toLowerCase()}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Lucky Elements -->
+    <div class="tab-content" data-tab="lucky">
+      <div class="report-card">
+        <h3><span class="icon">🍀</span> Your Lucky Elements</h3>
+        <p>Based on your Day Master (<span class="highlight">${dayMasterEn}</span>), here are your personalized lucky correspondences:</p>
+        <div class="lucky-grid">
+          <div class="lucky-item"><div class="lucky-label">Lucky Colors</div><div class="lucky-value">${lucky.colors}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Lucky Directions</div><div class="lucky-value">${lucky.directions}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Lucky Season</div><div class="lucky-value">${lucky.seasons}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Lucky Numbers</div><div class="lucky-value">${lucky.numbers}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Lucky Stones</div><div class="lucky-value">${lucky.gemstones}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Zodiac Animal</div><div class="lucky-value">${zodiac}</div></div>
+        </div>
+      </div>
+      <div class="report-card">
+        <h3><span class="icon">🧭</span> Life Guidance</h3>
+        <p>To balance your elemental chart, focus on incorporating your <span class="highlight">weakest element (${EL_ICON[analysis.weakest]} ${EL_EN[analysis.weakest]})</span> into your daily life:</p>
+        <div class="lucky-grid">
+          <div class="lucky-item"><div class="lucky-label">Balancing Colors</div><div class="lucky-value">${LUCKY_DATA[analysis.weakest].colors}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Balancing Direction</div><div class="lucky-value">${LUCKY_DATA[analysis.weakest].directions}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Balancing Season</div><div class="lucky-value">${LUCKY_DATA[analysis.weakest].seasons}</div></div>
+          <div class="lucky-item"><div class="lucky-label">Balancing Stones</div><div class="lucky-value">${LUCKY_DATA[analysis.weakest].gemstones}</div></div>
+        </div>
+        <p style="margin-top:1rem">Your <span class="highlight">favorable element</span> for growth is <span class="highlight">${EL_ICON[analysis.genCycle[analysis.dayMaster]]} ${EL_EN[analysis.genCycle[analysis.dayMaster]]}</span> — the element that feeds and nourishes your Day Master. Incorporating this element amplifies your natural strengths.</p>
+      </div>
+    </div>
+  `;
+
+  // Animate compatibility bars
+  setTimeout(()=>{
+    document.querySelectorAll('.compat-fill').forEach(b=>{b.style.width=b.dataset.w+'%'});
+  },200);
+}
+
+// ===== TAB SWITCHING =====
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('tab-btn')){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    e.target.classList.add('active');
+    document.querySelector(`.tab-content[data-tab="${e.target.dataset.tab}"]`).classList.add('active');
+  }
+});
+
+// ===== FORM SUBMIT =====
+document.getElementById('birthForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const dateStr=document.getElementById('birthDate').value;
+  const hourVal=parseInt(document.getElementById('birthHour').value);
+  const gender=document.querySelector('input[name="gender"]:checked').value;
+  const name=document.getElementById('userName').value.trim();
+  if(!dateStr||hourVal===undefined||isNaN(hourVal)) return;
+
+  const date=new Date(dateStr+'T12:00:00');
+  const hourIdx=hourVal===-1?-1:hourVal;
+  const bazi=calcBazi(date,hourIdx);
+  const analysis=analyzeElements(bazi);
+
+  // Show loading
+  document.getElementById('inputScreen').style.display='none';
+  document.getElementById('loadingScreen').style.display='flex';
+
+  setTimeout(()=>{
+    document.getElementById('loadingScreen').style.display='none';
+    document.getElementById('resultScreen').classList.add('active');
+
+    const displayName=name?name:'Your';
+    document.getElementById('resultTitle').textContent=name?`${name}'s Cosmic Blueprint`:'Your Cosmic Blueprint';
+    document.getElementById('resultSubtitle').textContent=
+      `Day Master: ${bazi.day.stem.enEl} · Zodiac: ${bazi.year.branch.animal} · ${bazi.hasHour?'Full Chart':'Partial Chart (time unknown)'}`;
+
+    renderPillars(bazi);
+    renderElementBars(analysis);
+    renderReport(bazi,analysis,name);
+    window.scrollTo({top:0,behavior:'smooth'});
+  },2800);
+});
+
+// ===== RESET =====
+function resetApp(){
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('inputScreen').style.display='flex';
+  document.getElementById('birthForm').reset();
+  document.getElementById('genderM').checked=true;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===== STARFIELD BACKGROUND =====
+const canvas=document.getElementById('stars');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function initStars(){
+  stars=[];
+  const count=Math.floor((canvas.width*canvas.height)/8000);
+  for(let i=0;i<count;i++){
+    stars.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*1.5+0.3,
+      o:Math.random()*0.6+0.2,
+      s:Math.random()*0.02+0.005,
+      phase:Math.random()*Math.PI*2
+    });
+  }
+}
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const t=Date.now()*0.001;
+  stars.forEach(s=>{
+    const twinkle=Math.sin(t*s.s*10+s.phase)*0.3+0.7;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(212,175,55,${s.o*twinkle})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize',()=>{resizeCanvas();initStars()});
+resizeCanvas();initStars();drawStars();
+</script>
+</body>
+</html>
