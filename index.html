@@ -225,12 +225,156 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
   .season-grid{grid-template-columns:repeat(2,1fr)}
   .score-section{flex-direction:column;text-align:center;align-items:center}
 }
+/* ===== PREMIUM / PAYWALL ===== */
+.premium-badge{display:inline-block;font-size:.6rem;padding:.15rem .4rem;border-radius:6px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a1a;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:.3rem;vertical-align:middle}
+.tab-btn.locked{opacity:.6}
+.tab-btn.locked::after{content:'🔒';font-size:.7rem;margin-left:.3rem}
+.locked-content{position:relative;overflow:hidden;min-height:200px}
+.locked-content .lock-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,26,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;border-radius:20px;text-align:center;padding:2rem}
+.lock-overlay .lock-icon{font-size:2.5rem;margin-bottom:1rem;filter:drop-shadow(0 0 10px var(--gold-dim))}
+.lock-overlay h4{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1.1rem;margin-bottom:.5rem}
+.lock-overlay p{color:var(--text-dim);font-size:.85rem;max-width:320px;line-height:1.6;margin-bottom:1.5rem}
+.btn-unlock{padding:.8rem 2rem;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:10px;color:#1a1a1a;font-family:'Cinzel',serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .3s;letter-spacing:.05em}
+.btn-unlock:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(212,175,55,.3)}
+
+/* Upgrade Modal */
+.upgrade-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
+.upgrade-modal.show{display:flex;animation:fadeUp .3s ease}
+.upgrade-card{max-width:600px;width:100%;background:linear-gradient(145deg,rgba(26,26,62,.95),rgba(18,18,42,.98));border:1px solid var(--border-bright);border-radius:24px;padding:2.5rem;max-height:90vh;overflow-y:auto}
+.upgrade-card h2{font-family:'Cinzel',serif;font-size:1.5rem;text-align:center;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+.upgrade-card .upgrade-sub{text-align:center;color:var(--text-dim);font-size:.85rem;margin-bottom:2rem}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.pricing-tier{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all .3s;cursor:pointer;position:relative}
+.pricing-tier:hover{border-color:var(--gold);transform:translateY(-3px)}
+.pricing-tier.popular{border-color:var(--gold);background:rgba(212,175,55,.08)}
+.pricing-tier .tier-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#1a1a1a;font-size:.6rem;padding:.2rem .8rem;border-radius:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.pricing-tier .tier-name{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-light);margin-bottom:.3rem}
+.pricing-tier .tier-price{font-size:1.8rem;font-weight:700;color:var(--text-bright);margin-bottom:.2rem}
+.pricing-tier .tier-period{font-size:.75rem;color:var(--text-dim);margin-bottom:1rem}
+.pricing-tier ul{list-style:none;padding:0;text-align:left;font-size:.8rem;color:var(--text-dim);line-height:1.8}
+.pricing-tier ul li::before{content:'✓ ';color:var(--gold)}
+.btn-upgrade-select{width:100%;padding:.7rem;margin-top:1rem;background:rgba(212,175,55,.15);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold-light);cursor:pointer;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;transition:all .3s}
+.pricing-tier.popular .btn-upgrade-select{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#1a1a1a;border:none;font-weight:600}
+.btn-upgrade-select:hover{transform:translateY(-1px)}
+.btn-close-modal{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:var(--text-dim);font-size:1.5rem;cursor:pointer;transition:color .3s}
+.btn-close-modal:hover{color:var(--text-bright)}
+.payment-note{text-align:center;font-size:.75rem;color:var(--text-dim);margin-top:1rem;line-height:1.6}
+
+/* ===== DA YUN TIMELINE ===== */
+.dayun-timeline{position:relative;padding-left:2rem;margin-top:1rem}
+.dayun-timeline::before{content:'';position:absolute;left:.5rem;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold-dim),transparent)}
+.dayun-item{position:relative;margin-bottom:1.5rem;padding-left:1.5rem}
+.dayun-item::before{content:'';position:absolute;left:-.2rem;top:.5rem;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--bg-2);box-shadow:0 0 10px var(--gold-dim)}
+.dayun-item.current::before{background:var(--gold-light);box-shadow:0 0 15px var(--gold);animation:glowPulse 2s ease-in-out infinite}
+.dayun-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
+.dayun-age{font-size:.8rem;color:var(--gold-light);font-weight:600}
+.dayun-pillar{font-family:'Cinzel',serif;font-size:1rem;color:var(--text-bright)}
+.dayun-element{font-size:.75rem;color:var(--text-dim);padding:.15rem .5rem;background:rgba(0,0,0,.3);border-radius:8px}
+.dayun-score{font-size:.85rem;font-weight:700;padding:.15rem .6rem;border-radius:8px}
+.dayun-desc{font-size:.82rem;color:var(--text-dim);line-height:1.6;margin-top:.3rem}
+
+/* ===== COMPATIBILITY ===== */
+.compat-input{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
+.compat-input h4{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1rem;margin-bottom:1rem}
+.compat-result{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.compat-person{text-align:center;padding:1.5rem;background:rgba(0,0,0,.2);border-radius:16px;border:1px solid var(--border)}
+.compat-person .compat-name{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1.1rem;margin-bottom:.5rem}
+.compat-person .compat-daymaster{font-size:.8rem;color:var(--text-dim)}
+.compat-vs{text-align:center;font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);align-self:center}
+.compat-score-ring{position:relative;width:140px;height:140px;margin:1rem auto}
+.compat-score-ring svg{transform:rotate(-90deg)}
+.compat-bars{margin-top:1rem}
+.compat-bar-item{margin:.5rem 0}
+.compat-bar-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.2rem;color:var(--text-dim)}
+.compat-bar-track{height:10px;background:rgba(0,0,0,.3);border-radius:5px;overflow:hidden}
+.compat-bar-fill{height:100%;border-radius:5px;transition:width 1s ease}
+
+/* ===== MONTHLY CALENDAR ===== */
+.month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.month-nav button{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--gold-light);padding:.5rem 1rem;cursor:pointer;font-size:.85rem;transition:all .3s}
+.month-nav button:hover{border-color:var(--gold)}
+.month-nav .month-label{font-family:'Cinzel',serif;color:var(--gold-light);font-size:1rem}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-header{text-align:center;font-size:.7rem;color:var(--text-dim);text-transform:uppercase;padding:.3rem}
+.cal-day{text-align:center;padding:.5rem .2rem;background:rgba(0,0,0,.15);border-radius:8px;border:1px solid transparent;font-size:.8rem;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;position:relative}
+.cal-day:hover{border-color:var(--border-bright);transform:scale(1.05)}
+.cal-day.auspicious{background:rgba(76,175,80,.15);border-color:rgba(76,175,80,.4)}
+.cal-day.inauspicious{background:rgba(255,82,82,.1);border-color:rgba(255,82,82,.25)}
+.cal-day.today{border-color:var(--gold);box-shadow:0 0 10px rgba(212,175,55,.2)}
+.cal-day .cal-num{font-weight:600;color:var(--text)}
+.cal-day .cal-icon{font-size:.7rem;margin-top:.1rem}
+.cal-day .cal-score{font-size:.55rem;color:var(--text-dim)}
+.cal-legend{display:flex;gap:1rem;margin-top:1rem;font-size:.75rem;color:var(--text-dim);justify-content:center}
+.cal-legend span{display:flex;align-items:center;gap:.3rem}
+.cal-legend .dot{width:10px;height:10px;border-radius:50%}
+
+/* ===== DATE SELECTION ===== */
+.date-event-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem;margin-bottom:1.5rem}
+.event-btn{padding:.8rem;text-align:center;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;color:var(--text);cursor:pointer;font-size:.8rem;transition:all .3s}
+.event-btn:hover,.event-btn.active{border-color:var(--gold);background:rgba(212,175,55,.1);color:var(--gold-light)}
+.auspicious-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-top:1rem}
+.auspicious-item{padding:.8rem;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.25);border-radius:10px;text-align:center}
+.auspicious-item .a-date{font-weight:600;color:var(--gold-light);font-size:.9rem}
+.auspicious-item .a-reason{font-size:.7rem;color:var(--text-dim);margin-top:.2rem}
+
+/* ===== NAME ANALYSIS ===== */
+.name-input-row{display:flex;gap:.5rem;margin-bottom:1rem}
+.name-input-row input{flex:1;padding:.8rem 1rem;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;color:var(--text-bright);font-size:1rem}
+.name-input-row button{padding:.8rem 1.5rem;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border:none;border-radius:10px;color:#1a1a1a;font-weight:600;cursor:pointer;white-space:nowrap}
+.name-result{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.5rem;margin-top:1rem}
+.name-stat{text-align:center;padding:1rem;background:rgba(0,0,0,.2);border-radius:10px;border:1px solid var(--border)}
+.name-stat .ns-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;margin-bottom:.3rem}
+.name-stat .ns-value{font-size:1.2rem;color:var(--gold-light);font-weight:600}
+
+/* ===== MBTI CROSS ===== */
+.mbti-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.mbti-card{padding:1.2rem;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:14px;text-align:center}
+.mbti-card .mbti-type{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-light);margin-bottom:.3rem}
+.mbti-card .mbti-label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.mbti-desc{font-size:.85rem;color:var(--text-dim);line-height:1.7;margin-top:1rem}
+
+/* ===== PRIVACY MODAL ===== */
+.privacy-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem}
+.privacy-modal.show{display:flex;animation:fadeUp .3s ease}
+.privacy-card{max-width:560px;width:100%;background:linear-gradient(145deg,rgba(26,26,62,.95),rgba(18,18,42,.98));border:1px solid var(--border-bright);border-radius:24px;padding:2.5rem;max-height:85vh;overflow-y:auto}
+.privacy-card h2{font-family:'Cinzel',serif;color:var(--gold-light);margin-bottom:1rem;font-size:1.3rem}
+.privacy-card h3{color:var(--gold-light);font-size:.95rem;margin:1.2rem 0 .5rem}
+.privacy-card p{font-size:.85rem;color:var(--text-dim);line-height:1.7;margin-bottom:.5rem}
+.footer-links{display:flex;gap:1.5rem;justify-content:center;margin-top:1.5rem;font-size:.8rem}
+.footer-links a{color:var(--text-dim);cursor:pointer;text-decoration:none;transition:color .3s}
+.footer-links a:hover{color:var(--gold-light)}
+
+/* ===== WELLNESS (renamed from health) ===== */
+.wellness-note{padding:.8rem 1rem;background:rgba(102,187,106,.06);border:1px solid rgba(102,187,106,.2);border-radius:10px;font-size:.75rem;color:var(--text-dim);line-height:1.5;margin-top:1rem}
+.wellness-note strong{color:#81C784}
+
+@media(max-width:640px){
+  .input-card{padding:2rem 1.5rem}
+  .form-row{grid-template-columns:1fr}
+  .pillars-display{gap:.5rem}
+  .pillar{min-width:70px;padding:1rem .5rem}
+  .pillar-stem,.pillar-branch{font-size:1.1rem}
+  .result-header h2{font-size:1.3rem}
+  .report-card{padding:1.5rem}
+  .tab-btn{padding:.5rem .8rem;font-size:.8rem}
+  .year-areas{grid-template-columns:1fr}
+  .season-grid{grid-template-columns:repeat(2,1fr)}
+  .score-section{flex-direction:column;text-align:center;align-items:center}
+  .pricing-grid{grid-template-columns:1fr}
+  .compat-result{grid-template-columns:1fr}
+  .cal-day{min-height:38px;font-size:.7rem}
+  .mbti-grid{grid-template-columns:1fr}
+}
 @media print{
-  body::before,#stars{display:none}
-  body{background:#fff;color:#000}
-  .tab-nav,.actions{display:none}
-  .tab-content{display:block!important}
-  .report-card{break-inside:avoid;border-color:#ccc}
+  body::before,#stars,.splash-screen,.upgrade-modal,.privacy-modal,.tab-nav,.actions,.locked-content .lock-overlay{display:none!important}
+  body{background:#fff;color:#000;font-size:11px}
+  .tab-content{display:block!important;page-break-inside:avoid}
+  .report-card{break-inside:avoid;border:1px solid #ccc;box-shadow:none;margin-bottom:1rem}
+  .result-screen{max-width:100%;padding:1rem}
+  .element-bar-fill{color:#333!important}
+  .highlight{color:#8a6d00!important}
+  .year-card{border:1px solid #ccc;page-break-inside:avoid}
+  .locked-content{overflow:visible;min-height:auto}
 }
 </style>
 </head>
@@ -344,7 +488,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     </form>
     <p class="disclaimer">
       Based on traditional Chinese Bazi (Four Pillars of Destiny) astrology.<br>
-      For entertainment and self-reflection purposes.
+      <strong style="color:var(--gold-dim)">For entertainment and self-reflection purposes only.</strong><br>
+      Not a substitute for professional medical, financial, or psychological advice.<br>
+      <a onclick="showPrivacy()" style="color:var(--text-dim);cursor:pointer;text-decoration:underline">Privacy Policy</a> · 
+      <a onclick="showTerms()" style="color:var(--text-dim);cursor:pointer;text-decoration:underline">Terms of Service</a>
     </p>
   </div>
 </div>
@@ -382,17 +529,107 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <button class="tab-btn" data-tab="career">Career</button>
     <button class="tab-btn" data-tab="love">Love</button>
     <button class="tab-btn" data-tab="wealth">Wealth</button>
-    <button class="tab-btn" data-tab="health">Health</button>
+    <button class="tab-btn" data-tab="health">Wellness</button>
     <button class="tab-btn" data-tab="lucky">Lucky Elements</button>
     <button class="tab-btn" data-tab="yearly">Yearly Fortune</button>
+    <button class="tab-btn locked" data-tab="dayun">Da Yun <span class="premium-badge">Pro</span></button>
+    <button class="tab-btn locked" data-tab="monthly">Monthly <span class="premium-badge">Pro</span></button>
+    <button class="tab-btn locked" data-tab="compat">Soulmate Match <span class="premium-badge">Pro</span></button>
+    <button class="tab-btn locked" data-tab="dateselect">Auspicious Dates <span class="premium-badge">Pro</span></button>
+    <button class="tab-btn locked" data-tab="name">Name Analysis <span class="premium-badge">Pro</span></button>
+    <button class="tab-btn locked" data-tab="mbti">MBTI × Bazi <span class="premium-badge">Pro</span></button>
   </div>
 
   <!-- Tab Contents -->
   <div id="tabContent"></div>
 
   <div class="actions">
-    <button class="btn-action" onclick="window.print()">Print Report</button>
+    <button class="btn-action" onclick="exportPDF()">📄 Export PDF Report</button>
+    <button class="btn-action" onclick="window.print()">🖨️ Print</button>
     <button class="btn-action btn-primary" onclick="resetApp()">New Reading</button>
+  </div>
+  <div class="footer-links">
+    <a onclick="showPrivacy()">Privacy Policy</a>
+    <a onclick="showTerms()">Terms of Service</a>
+    <a onclick="showUpgrade()">Upgrade Plan</a>
+  </div>
+</div>
+
+<!-- ===== UPGRADE MODAL ===== -->
+<div class="upgrade-modal" id="upgradeModal">
+  <div class="upgrade-card">
+    <button class="btn-close-modal" onclick="closeModal('upgradeModal')">×</button>
+    <h2>Unlock Your Full Destiny</h2>
+    <p class="upgrade-sub">Choose a plan to access premium features</p>
+    <div class="pricing-grid">
+      <div class="pricing-tier">
+        <div class="tier-name">Premium</div>
+        <div class="tier-price">$9.99</div>
+        <div class="tier-period">one-time payment</div>
+        <ul>
+          <li>Complete life report</li>
+          <li>Da Yun 10-year cycles</li>
+          <li>Monthly fortune calendar</li>
+          <li>PDF report export</li>
+          <li>Ad-free experience</li>
+        </ul>
+        <button class="btn-upgrade-select" onclick="unlockPremium('premium')">Get Premium</button>
+      </div>
+      <div class="pricing-tier popular">
+        <div class="tier-badge">Best Value</div>
+        <div class="tier-name">Pro</div>
+        <div class="tier-price">$19.99</div>
+        <div class="tier-period">one-time payment</div>
+        <ul>
+          <li>All Premium features</li>
+          <li>Soulmate compatibility match</li>
+          <li>Auspicious date selection</li>
+          <li>Name analysis (姓名学)</li>
+          <li>MBTI × Bazi cross-analysis</li>
+          <li>Priority support</li>
+        </ul>
+        <button class="btn-upgrade-select" onclick="unlockPremium('pro')">Get Pro</button>
+      </div>
+    </div>
+    <p class="payment-note">🔒 Secure payment via Stripe · Instant access · 30-day money-back guarantee<br>This is a demo — no actual payment is processed. Click to simulate unlock.</p>
+  </div>
+</div>
+
+<!-- ===== PRIVACY MODAL ===== -->
+<div class="privacy-modal" id="privacyModal">
+  <div class="privacy-card">
+    <button class="btn-close-modal" onclick="closeModal('privacyModal')">×</button>
+    <h2>Privacy Policy</h2>
+    <p>We respect your privacy and are committed to protecting your personal data.</p>
+    <h3>Data We Collect</h3>
+    <p>Your name (optional), birth date, birth time, and gender — solely for generating your Bazi reading. No data is sent to any server; all calculations run in your browser.</p>
+    <h3>Data Storage</h3>
+    <p>Your reading results are stored locally in your browser's localStorage. Clearing your browser data will remove all saved information. We do not use cookies for tracking.</p>
+    <h3>Third-Party Services</h3>
+    <p>This app does not share your data with any third party. Payment processing (when available) is handled by Stripe, which has its own privacy policy.</p>
+    <h3>Your Rights</h3>
+    <p>You have the right to access, correct, or delete your data at any time by clearing your browser storage. For GDPR/CCPA inquiries, contact us at the email below.</p>
+    <h3>Contact</h3>
+    <p>For privacy questions: cosmicdestiny@example.com</p>
+    <p style="font-size:.75rem;margin-top:1.5rem;color:var(--text-dim)">Last updated: August 2026</p>
+  </div>
+</div>
+
+<!-- ===== TERMS MODAL ===== -->
+<div class="privacy-modal" id="termsModal">
+  <div class="privacy-card">
+    <button class="btn-close-modal" onclick="closeModal('termsModal')">×</button>
+    <h2>Terms of Service</h2>
+    <h3>Entertainment Purposes Only</h3>
+    <p>Cosmic Destiny is provided for entertainment and self-reflection purposes only. Bazi (Four Pillars of Destiny) is a traditional Chinese metaphysical system. Our readings are generated by algorithms and should not be considered as professional advice.</p>
+    <h3>No Professional Advice</h3>
+    <p>Content related to health, finance, career, and relationships is for informational purposes only and does not constitute medical, financial, legal, or psychological advice. Always consult qualified professionals for important decisions.</p>
+    <h3>Accuracy Disclaimer</h3>
+    <p>While we strive for accuracy in our Bazi calculations, we cannot guarantee complete accuracy due to simplified solar term approximations and algorithmic limitations.</p>
+    <h3>Limitation of Liability</h3>
+    <p>The creators of Cosmic Destiny are not liable for any decisions or actions taken based on the readings provided. Users are solely responsible for their choices.</p>
+    <h3>Refund Policy</h3>
+    <p>We offer a 30-day money-back guarantee on all paid plans. Contact us for a full refund, no questions asked.</p>
   </div>
 </div>
 
@@ -902,8 +1139,8 @@ function renderElementBars(analysis){
   },100);
 }
 
-function renderReport(bazi,analysis,name){
-  const p=PROFILES[analysis.dayMaster];
+function renderReport(bazi,analysis,name,gender){
+  var p=PROFILES[analysis.dayMaster];
   const lucky=LUCKY_DATA[analysis.dayMaster];
   const compat=COMPATIBILITY[analysis.dayMaster];
   const zodiac=bazi.year.branch.animal;
@@ -973,11 +1210,12 @@ function renderReport(bazi,analysis,name){
       </div>
     </div>
 
-    <!-- Health -->
+    <!-- Health / Wellness -->
     <div class="tab-content" data-tab="health">
       <div class="report-card">
-        <h3><span class="icon">🏥</span> Health & Vitality</h3>
+        <h3><span class="icon">🌿</span> Wellness & Lifestyle Guide</h3>
         ${p.health}
+        <div class="wellness-note"><strong>⚠️ Wellness Disclaimer:</strong> This guidance is based on traditional Chinese Five Element theory for lifestyle and self-care purposes only. It is not medical advice. Always consult a qualified healthcare professional for medical concerns.</div>
       </div>
       <div class="report-card">
         <h3><span class="icon">🔄</span> Elemental Healing</h3>
@@ -1018,6 +1256,30 @@ function renderReport(bazi,analysis,name){
       </div>
     </div>
     ${renderYearlyFortune(bazi,analysis)}
+    <!-- Da Yun (Pro) -->
+    <div class="tab-content" data-tab="dayun">
+      ${isPremium('dayun')?renderDaYun(bazi,analysis,gender):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🔒</div><h4>Da Yun — Ten-Year Life Cycles</h4><p>Unlock the power of Da Yun analysis to see your 10-year life cycles. Discover which decades bring opportunity, challenge, and transformation.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Premium</button></div></div>'}
+    </div>
+    <!-- Monthly Calendar (Pro) -->
+    <div class="tab-content" data-tab="monthly">
+      ${isPremium('monthly')?renderMonthlyTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">📅</div><h4>Monthly Fortune Calendar</h4><p>Get day-by-day fortune predictions for every month. Know your auspicious and inauspicious days at a glance.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Premium</button></div></div>'}
+    </div>
+    <!-- Compatibility (Pro) -->
+    <div class="tab-content" data-tab="compat">
+      ${isPremium('compat')?renderCompatTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">💞</div><h4>Soulmate Compatibility Match</h4><p>Enter your partner\'s birth data to discover your elemental compatibility, relationship dynamics, and personalized love advice.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+    </div>
+    <!-- Date Selection (Pro) -->
+    <div class="tab-content" data-tab="dateselect">
+      ${isPremium('dateselect')?renderDateSelectTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🎯</div><h4>Auspicious Date Selection</h4><p>Find the perfect dates for weddings, moving, business openings, and important events based on your personal energy.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+    </div>
+    <!-- Name Analysis (Pro) -->
+    <div class="tab-content" data-tab="name">
+      ${isPremium('name')?renderNameTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🔤</div><h4>Name Analysis (姓名学)</h4><p>Discover the hidden elemental energy in your name. See how your name interacts with your Bazi Day Master.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+    </div>
+    <!-- MBTI × Bazi (Pro) -->
+    <div class="tab-content" data-tab="mbti">
+      ${isPremium('mbti')?renderMBTITab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🧬</div><h4>MBTI × Bazi Cross-Analysis</h4><p>Where East meets West — discover your MBTI personality type through the lens of Chinese Five Element theory.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+    </div>
   `;
 
   // Animate compatibility bars
@@ -1036,11 +1298,22 @@ function renderReport(bazi,analysis,name){
 
 // ===== TAB SWITCHING =====
 document.addEventListener('click',e=>{
-  if(e.target.classList.contains('tab-btn')){
+  if(e.target.classList.contains('tab-btn')||e.target.closest('.tab-btn')){
+    var btn=e.target.classList.contains('tab-btn')?e.target:e.target.closest('.tab-btn');
+    var tab=btn.dataset.tab;
+    // Check if locked
+    if(btn.classList.contains('locked')){
+      showUpgrade();
+      return;
+    }
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-    e.target.classList.add('active');
-    document.querySelector(`.tab-content[data-tab="${e.target.dataset.tab}"]`).classList.add('active');
+    btn.classList.add('active');
+    var content=document.querySelector('.tab-content[data-tab="'+tab+'"]');
+    if(content)content.classList.add('active');
+    // Initialize tab-specific content
+    if(tab==='monthly'&&isPremium('monthly'))drawCalendar();
+    if(tab==='dateselect'&&isPremium('dateselect'))calcAuspiciousDates();
   }
 });
 
@@ -1073,7 +1346,9 @@ document.getElementById('birthForm').addEventListener('submit',e=>{
 
     renderPillars(bazi);
     renderElementBars(analysis);
-    renderReport(bazi,analysis,name);
+    // Store for premium functions
+    window._lastBazi={bazi:bazi,analysis:analysis,name:displayName,gender:gender};
+    renderReport(bazi,analysis,displayName,gender);
     window.scrollTo({top:0,behavior:'smooth'});
   },2800);
 });
@@ -1087,7 +1362,431 @@ function resetApp(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// ===== PREMIUM / PAYWALL SYSTEM =====
+var USER_PLAN=(function(){try{return localStorage.getItem('cd_plan')||'free'}catch(e){return 'free'}})();
+function isPremium(feature){
+  var proFeatures=['dayun','monthly','compat','dateselect','name','mbti'];
+  if(USER_PLAN==='pro') return true;
+  if(USER_PLAN==='premium' && proFeatures.indexOf(feature)===-1) return true;
+  // premium gets dayun, monthly, pdf
+  if(USER_PLAN==='premium' && (feature==='dayun'||feature==='monthly')) return true;
+  return false;
+}
+function unlockPremium(plan){
+  USER_PLAN=plan;
+  try{localStorage.setItem('cd_plan',plan)}catch(e){}
+  closeModal('upgradeModal');
+  // Remove locked badges
+  document.querySelectorAll('.tab-btn.locked').forEach(function(b){
+    b.classList.remove('locked');
+    var badge=b.querySelector('.premium-badge');
+    if(badge){
+      if(plan==='pro'){badge.textContent='Pro';badge.style.background='linear-gradient(135deg,#9C27B0,#6a4c93)';badge.style.color='#fff'}
+      else{badge.textContent='Premium';}
+    }
+  });
+  // Re-render report to unlock content
+  if(window._lastBazi){
+    renderReport(window._lastBazi.bazi,window._lastBazi.analysis,window._lastBazi.name);
+  }
+  alert(plan==='pro'?'🎉 Pro unlocked! All features are now available.':'🎉 Premium unlocked! Da Yun and Monthly features are now available.');
+}
+function showUpgrade(){document.getElementById('upgradeModal').classList.add('show')}
+function showPrivacy(){document.getElementById('privacyModal').classList.add('show')}
+function showTerms(){document.getElementById('termsModal').classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+
+// ===== DA YUN ENGINE =====
+var DAYUN_DIRECTIONS={yang:'forward',yin:'backward'};
+var DAYUN_START_AGES={male_yang:1,male_yin:10,female_yang:6,female_yin:15};
+function calcDaYun(bazi,gender){
+  var monthStemIdx=STEMS.indexOf(bazi.month.stem);
+  var monthBranchIdx=BRANCHES.indexOf(bazi.month.branch);
+  var isYang=bazi.day.stem.yin==='yang';
+  var dir=(gender==='male')===isYang?1:-1; // forward if male+yang or female+yin
+  // Count days to next/prev solar term (simplified: use ~3 days = 1 year)
+  var startAge=Math.floor(Math.random()*8)+1; // simplified 1-8 years
+  var pillars=[];
+  for(var i=0;i<6;i++){
+    var sIdx=((monthStemIdx+dir*(i+1))%10+10)%10;
+    var bIdx=((monthBranchIdx+dir*(i+1))%12+12)%12;
+    var age=startAge+i*10;
+    pillars.push({
+      stem:STEMS[sIdx],
+      branch:BRANCHES[bIdx],
+      startAge:age,
+      endAge:age+9,
+      el:STEMS[sIdx].el
+    });
+  }
+  return{pillars:pillars,startAge:startAge};
+}
+var DAYUN_DATA={
+  wood:{career:'Growth-oriented decade. Education, mentoring, and creative pursuits flourish. Your reputation expands steadily.',wealth:'Steady financial growth through patient investment. Real estate and green industries are favorable. Avoid get-rich-quick schemes.',love:'Relationships deepen through shared growth. New meaningful connections form. Existing partnerships benefit from renewed commitment.',health:'Liver and gallbladder need attention. Outdoor activities and nature connection are your medicine. Manage anger constructively.'},
+  fire:{career:'High-visibility decade. Leadership opportunities, public recognition, and creative breakthroughs. Your star rises.',wealth:'Wealth comes in bursts through bold moves. Leverage your personal brand. Set strict financial guardrails to prevent burnout.',love:'Passionate and intense decade. Romantic encounters are exciting but volatile. Channel fire into shared adventures.',health:'Heart and cardiovascular health priority. Manage stress, avoid stimulants. Practice cooling meditation. Guard against burnout.'},
+  earth:{career:'Stability and foundation-building decade. Real estate, long-term projects, and institutional roles bring steady advancement.',wealth:'Conservative accumulation pays off. Real estate investments shine. Patient, systematic wealth-building is your superpower.',love:'Devotion and commitment define this decade. Family and home life are central. Deep, lasting bonds form or strengthen.',health:'Digestive system needs care. Regular meals, warm foods, and grounding exercises are essential. Manage worry through mindfulness.'},
+  metal:{career:'Precision and discipline decade. Professional reputation solidifies. Legal, financial, and technical fields bring recognition.',wealth:'Disciplined wealth-building through structured investing. Quality assets, systematic approach. Avoid over-analysis paralysis.',love:'Loyalty and commitment are tested and proven. Relationships require softening your edges. Fierce devotion to the right partner.',health:'Lungs and respiratory system priority. Clean air, deep breathing, and skin care. Process grief to prevent physical manifestation.'},
+  water:{career:'Adaptability and wisdom decade. Communication, diplomacy, and intellectual pursuits shine. Career may flow in new directions.',wealth:'Wealth flows through intelligence and networking. Diversified income streams. Trust your intuition but verify with data.',love:'Emotionally deep and transformative decade. Connections are profound. Maintain boundaries to preserve your sense of self.',health:'Kidneys and urinary system care. Hydration, warmth, and rest are essential. Manage fear and anxiety through grounding practices.'}
+};
+function renderDaYun(bazi,analysis,gender){
+  var dy=calcDaYun(bazi,gender);
+  var now=new Date();
+  var birthYear=bazi.year.stem===STEMS[0]?now.getFullYear()-30:2020; // approximate
+  var currentAge=30; // simplified
+  var html='<div class="report-card"><h3><span class="icon">🔄</span> Da Yun — Ten-Year Life Cycles</h3>';
+  html+='<p>Your Da Yun (大运) represents the shifting energies that influence your life in 10-year cycles. Each cycle brings a new elemental theme that colors your career, wealth, relationships, and health. Understanding your current and upcoming cycles helps you align with cosmic timing.</p></div>';
+  html+='<div class="report-card"><div class="dayun-timeline">';
+  dy.pillars.forEach(function(p,i){
+    var isCurrent=i===Math.floor(Math.random()*3); // simplified current detection
+    var rel=getYearRelation(analysis.dayMaster,p.el);
+    var relData=RELATION_DATA[rel]||RELATION_DATA.neutral;
+    var score=relData.scoreBase+Math.floor(Math.random()*relData.scoreRange);
+    var dd=DAYUN_DATA[p.el];
+    html+='<div class="dayun-item'+(isCurrent?' current':'')+'">';
+    html+='<div class="dayun-header">';
+    html+='<span class="dayun-age">Age '+p.startAge+'–'+p.endAge+'</span>';
+    html+='<span class="dayun-pillar">'+p.stem.ch+p.branch.ch+'</span>';
+    html+='<span class="dayun-element">'+EL_ICON[p.el]+' '+EL_EN[p.el]+'</span>';
+    html+='<span class="dayun-score" style="color:'+relData.color+'">'+score+'/100</span>';
+    if(isCurrent)html+='<span class="year-badge now">Current</span>';
+    html+='</div>';
+    html+='<div class="dayun-desc"><strong>'+relData.label+'</strong> — '+relData.desc+'</div>';
+    html+='<div class="dayun-desc"><strong>💼 Career:</strong> '+dd.career+'</div>';
+    html+='<div class="dayun-desc"><strong>💰 Wealth:</strong> '+dd.wealth+'</div>';
+    html+='<div class="dayun-desc"><strong>❤️ Love:</strong> '+dd.love+'</div>';
+    html+='<div class="dayun-desc"><strong>🏥 Wellness:</strong> '+dd.health+'</div>';
+    html+='</div>';
+  });
+  html+='</div></div>';
+  return html;
+}
+
+// ===== COMPATIBILITY MATCH =====
+function renderCompatTab(bazi,analysis){
+  var html='<div class="report-card"><h3><span class="icon">💞</span> Soulmate Compatibility Match</h3>';
+  html+='<p>Enter your partner\'s birth information to discover your elemental compatibility, relationship dynamics, and personalized advice.</p></div>';
+  html+='<div class="compat-input"><h4>Partner\'s Information</h4>';
+  html+='<div class="form-row"><div class="form-group"><label>Birth Date</label><input type="date" id="partnerDate" max="2026-12-31" min="1900-01-01"></div>';
+  html+='<div class="form-group"><label>Birth Time</label><select id="partnerHour"><option value="-1">Unknown</option>';
+  for(var h=0;h<12;h++){
+    html+='<option value="'+h+'">'+['11PM-1AM','1-3AM','3-5AM','5-7AM','7-9AM','9-11AM','11AM-1PM','1-3PM','3-5PM','5-7PM','7-9PM','9-11PM'][h]+'</option>';
+  }
+  html+='</select></div></div>';
+  html+='<button class="btn-reveal" onclick="calcCompatibility()">Check Compatibility</button></div>';
+  html+='<div id="compatResult"></div>';
+  return html;
+}
+function calcCompatibility(){
+  var dStr=document.getElementById('partnerDate').value;
+  var hVal=parseInt(document.getElementById('partnerHour').value);
+  if(!dStr){alert('Please enter your partner\'s birth date.');return}
+  var date=new Date(dStr+'T12:00:00');
+  var bazi2=calcBazi(date,hVal);
+  var a1=window._lastBazi.analysis;
+  var a2=analyzeElements(bazi2);
+  var el1=a1.dayMaster,el2=a2.dayMaster;
+  // Element compatibility scoring
+  var scores={overall:0,personality:0,communication:0,emotion:0,values:0};
+  var compat1=COMPATIBILITY[el1];
+  if(el1===el2){scores.overall=65;scores.personality=80;scores.communication=85;scores.emotion=70;scores.values=90}
+  else if(compat1.best.indexOf(el2)>-1){scores.overall=88;scores.personality=85;scores.communication=82;scores.emotion=90;scores.values=80}
+  else if(compat1.challenging.indexOf(el2)>-1){scores.overall=42;scores.personality=50;scores.communication=40;scores.emotion=38;scores.values=55}
+  else{scores.overall=70;scores.personality=68;scores.communication=72;scores.emotion=65;scores.values=70}
+  // Add randomness
+  for(var k in scores)scores[k]+=Math.floor(Math.random()*6-3);
+  for(var k in scores)scores[k]=Math.max(25,Math.min(95,scores[k]));
+  var circumference=2*Math.PI*60;
+  var dashOffset=circumference*(1-scores.overall/100);
+  var el1Name=EL_EN[el1],el2Name=EL_EN[el2];
+  var verdict=scores.overall>=80?'Soulmate Connection':scores.overall>=65?'Harmonious Match':scores.overall>=50?'Moderate Compatibility':'Needs Conscious Effort';
+  var verdictColor=scores.overall>=80?'#4CAF50':scores.overall>=65?'#FFD700':scores.overall>=50?'#FF9800':'#FF5252';
+  var advice='';
+  if(scores.overall>=80)advice='You share a natural elemental harmony that makes understanding effortless. Your energies complement and nourish each other. Nurture this rare connection with gratitude and intentionality.';
+  else if(scores.overall>=65)advice='Your elements are compatible with some natural differences. Focus on shared values and communicate openly through disagreements. Your differences can become strengths when approached with mutual respect.';
+  else if(scores.overall>=50)advice='Your elements have a neutral relationship — neither naturally harmonious nor conflicting. Success depends on conscious effort, shared goals, and willingness to understand each other\'s perspectives. Patience and empathy are your tools.';
+  else advice='Your elements present significant challenges. This doesn\'t mean the relationship can\'t work — it means it requires more conscious effort, communication, and compromise. Consider it a growth opportunity. Focus on what unites you rather than what divides.';
+  var html='<div class="compat-result">';
+  html+='<div class="compat-person"><div class="compat-name">You</div><div class="compat-daymaster">'+EL_ICON[el1]+' '+el1Name+' Day Master</div></div>';
+  html+='<div class="compat-vs">💞</div>';
+  html+='<div class="compat-person"><div class="compat-name">Partner</div><div class="compat-daymaster">'+EL_ICON[el2]+' '+el2Name+' Day Master</div></div>';
+  html+='</div>';
+  html+='<div class="report-card" style="text-align:center">';
+  html+='<div class="compat-score-ring"><svg width="140" height="140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/><circle cx="70" cy="70" r="60" fill="none" stroke="'+verdictColor+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+circumference+'" stroke-dashoffset="'+circumference+'" id="compatRing"/></svg><div class="score-center"><div class="score-num" style="color:'+verdictColor+'">'+scores.overall+'</div><div class="score-label">Match Score</div></div></div>';
+  html+='<h4 style="color:'+verdictColor+';margin-top:.5rem">'+verdict+'</h4></div>';
+  html+='<div class="report-card"><h3><span class="icon">📊</span> Compatibility Breakdown</h3>';
+  var dims=[['personality','🧠 Personality Alignment'],['communication','💬 Communication Style'],['emotion','💖 Emotional Resonance'],['values','⭐ Shared Values']];
+  dims.forEach(function(d){
+    var sc=scores[d[0]];
+    var col=sc>=75?'#4CAF50':sc>=55?'#FFD700':'#FF5252';
+    html+='<div class="compat-bar-item"><div class="compat-bar-label"><span>'+d[1]+'</span><span style="color:'+col+'">'+sc+'%</span></div><div class="compat-bar-track"><div class="compat-bar-fill" style="background:'+col+';width:0" data-w="'+sc+'"></div></div></div>';
+  });
+  html+='</div>';
+  html+='<div class="report-card"><h3><span class="icon">💡</span> Relationship Advice</h3><p>'+advice+'</p>';
+  if(scores.overall<65){
+    html+='<p style="margin-top:1rem"><strong>Tip:</strong> Incorporate your partner\'s favorable elements into your shared space — '+LUCKY_DATA[el2].colors.toLowerCase()+' colors, '+LUCKY_DATA[el2].directions.toLowerCase()+' directions — to harmonize your energies.</p>';
+  }
+  html+='</div>';
+  document.getElementById('compatResult').innerHTML=html;
+  // Animate
+  setTimeout(function(){
+    document.getElementById('compatRing').style.strokeDashoffset=dashOffset;
+    document.querySelectorAll('#compatResult .compat-bar-fill').forEach(function(b){b.style.width=b.dataset.w+'%'});
+  },200);
+}
+
+// ===== MONTHLY FORTUNE CALENDAR =====
+var calCurrentMonth=new Date().getMonth();
+var calCurrentYear=new Date().getFullYear();
+function renderMonthlyTab(bazi,analysis){
+  var html='<div class="report-card"><h3><span class="icon">📅</span> Monthly Fortune Calendar</h3>';
+  html+='<p>Each day carries unique elemental energies that interact with your Day Master. Green days are auspicious — ideal for important actions. Red days require caution. Click any day for details.</p></div>';
+  html+='<div class="report-card"><div class="month-nav">';
+  html+='<button onclick="changeMonth(-1)">◀ Prev</button>';
+  html+='<span class="month-label" id="calMonthLabel"></span>';
+  html+='<button onclick="changeMonth(1)">Next ▶</button>';
+  html+='</div>';
+  html+='<div id="calGrid"></div>';
+  html+='<div class="cal-legend"><span><span class="dot" style="background:#4CAF50"></span> Auspicious</span><span><span class="dot" style="background:#FF5252"></span> Inauspicious</span><span><span class="dot" style="background:#D4A04C"></span> Neutral</span></div>';
+  html+='</div>';
+  html+='<div id="calDayDetail"></div>';
+  return html;
+}
+function changeMonth(delta){
+  calCurrentMonth+=delta;
+  if(calCurrentMonth>11){calCurrentMonth=0;calCurrentYear++}
+  if(calCurrentMonth<0){calCurrentMonth=11;calCurrentYear--}
+  drawCalendar();
+}
+function drawCalendar(){
+  var dm=window._lastBazi.analysis.dayMaster;
+  var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonthLabel').textContent=monthNames[calCurrentMonth]+' '+calCurrentYear;
+  var firstDay=new Date(calCurrentYear,calCurrentMonth,1).getDay();
+  var daysInMonth=new Date(calCurrentYear,calCurrentMonth+1,0).getDate();
+  var today=new Date();
+  var html='<div class="cal-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(d){html+='<div class="cal-day-header">'+d+'</div>'});
+  for(var i=0;i<firstDay;i++)html+='<div class="cal-day"></div>';
+  for(var d=1;d<=daysInMonth;d++){
+    var date=new Date(calCurrentYear,calCurrentMonth,d);
+    var jdn=getJulianDayNum(calCurrentYear,calCurrentMonth+1,d);
+    var daySB=((jdn+49)%60+60)%60;
+    var dayStemEl=STEMS[daySB%10].el;
+    var rel=getYearRelation(dm,dayStemEl);
+    var score=50;
+    if(rel==='favorable')score=75+Math.floor(Math.random()*15);
+    else if(rel==='wealth')score=70+Math.floor(Math.random()*15);
+    else if(rel==='power')score=30+Math.floor(Math.random()*15);
+    else if(rel==='draining')score=45+Math.floor(Math.random()*10);
+    else if(rel==='same')score=55+Math.floor(Math.random()*15);
+    else score=55+Math.floor(Math.random()*10);
+    var cls=score>=70?'auspicious':score<45?'inauspicious':'';
+    var isToday=date.toDateString()===today.toDateString();
+    var icon=score>=70?'★':score<45?'!':'·';
+    html+='<div class="cal-day '+cls+(isToday?' today':'')+'" onclick="showDayDetail('+d+','+score+',\''+rel+'\',\''+dayStemEl+'\')" style="cursor:pointer">';
+    html+='<div class="cal-num">'+d+'</div>';
+    html+='<div class="cal-icon" style="color:'+(score>=70?'#4CAF50':score<45?'#FF5252':'var(--text-dim)')+'">'+icon+'</div>';
+    html+='<div class="cal-score">'+score+'</div>';
+    html+='</div>';
+  }
+  html+='</div>';
+  document.getElementById('calGrid').innerHTML=html;
+}
+function showDayDetail(day,score,rel,el){
+  var relData=RELATION_DATA[rel]||RELATION_DATA.neutral;
+  var advice=score>=70?'An auspicious day! Favorable for important meetings, new beginnings, signing contracts, and social events.':
+    score<45?'A challenging day. Avoid major decisions, risky investments, and confrontations. Focus on routine tasks and self-care.':
+    'A neutral day. Good for everyday activities. Neither particularly lucky nor unlucky.';
+  document.getElementById('calDayDetail').innerHTML='<div class="report-card"><h3><span class="icon">'+(score>=70?'🌟':score<45?'⚠️':'📅')+'</span> Day '+day+' Details</h3><p><strong>Element:</strong> '+EL_ICON[el]+' '+EL_EN[el]+' · <strong>Type:</strong> '+relData.label+' · <strong>Score:</strong> '+score+'/100</p><p>'+advice+'</p><p style="margin-top:.5rem;color:var(--text-dim);font-size:.85rem">'+relData.desc+'</p></div>';
+}
+
+// ===== DATE SELECTION =====
+var dateSelectEvent='wedding';
+function renderDateSelectTab(bazi,analysis){
+  var html='<div class="report-card"><h3><span class="icon">🎯</span> Auspicious Date Selection</h3>';
+  html+='<p>Select an important life event, and we\'ll find the most auspicious dates in the next 3 months based on your Day Master.</p></div>';
+  html+='<div class="report-card"><div class="date-event-types">';
+  var events=[['wedding','💒 Wedding','active'],['moving','📦 Moving House',''],['business','🏢 Business Opening',''],['travel','✈️ Travel',''],['contract','📝 Signing Contract','']];
+  events.forEach(function(e){
+    html+='<div class="event-btn'+(e[2]==='active'?' active':'')+'" onclick="selectEvent(\''+e[0]+'\',this)">'+e[1]+'</div>';
+  });
+  html+='</div><div id="auspiciousDates"></div></div>';
+  return html;
+}
+function selectEvent(ev,el){
+  dateSelectEvent=ev;
+  document.querySelectorAll('.event-btn').forEach(function(b){b.classList.remove('active')});
+  el.classList.add('active');
+  calcAuspiciousDates();
+}
+function calcAuspiciousDates(){
+  var dm=window._lastBazi.analysis.dayMaster;
+  var now=new Date();
+  var dates=[];
+  for(var i=0;i<90;i++){
+    var date=new Date(now.getTime()+i*86400000);
+    var jdn=getJulianDayNum(date.getFullYear(),date.getMonth()+1,date.getDate());
+    var daySB=((jdn+49)%60+60)%60;
+    var dayStemEl=STEMS[daySB%10].el;
+    var rel=getYearRelation(dm,dayStemEl);
+    var score=50;
+    if(rel==='favorable')score=75+Math.floor(Math.random()*15);
+    else if(rel==='wealth')score=70+Math.floor(Math.random()*15);
+    else if(rel==='power')score=25+Math.floor(Math.random()*15);
+    else if(rel==='same')score=55+Math.floor(Math.random()*15);
+    else score=50+Math.floor(Math.random()*10);
+    if(score>=70)dates.push({date:date,score:score,rel:rel,el:dayStemEl});
+  }
+  dates.sort(function(a,b){return b.score-a.score});
+  var top=dates.slice(0,8);
+  var eventNames={wedding:'for a wedding',moving:'for moving house',business:'for business opening',travel:'for travel',contract:'for signing contracts'};
+  var html='<h4 style="color:var(--gold-light);margin-bottom:.5rem">Top Auspicious Dates '+eventNames[dateSelectEvent]+'</h4>';
+  if(top.length===0){html+='<p style="color:var(--text-dim)">No highly auspicious dates found in the next 90 days. Try a different event type.</p>'}
+  else{
+    html+='<div class="auspicious-list">';
+    top.forEach(function(d){
+      var dateStr=d.date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      var relData=RELATION_DATA[d.rel]||RELATION_DATA.neutral;
+      html+='<div class="auspicious-item"><div class="a-date">'+dateStr+'</div><div class="a-score" style="color:#4CAF50;font-weight:600">'+d.score+'/100</div><div class="a-reason">'+EL_ICON[d.el]+' '+relData.label+'</div></div>';
+    });
+    html+='</div>';
+  }
+  document.getElementById('auspiciousDates').innerHTML=html;
+}
+
+// ===== NAME ANALYSIS =====
+var NAME_STROKES={
+  'A':3,'B':2,'C':1,'D':2,'E':3,'F':2,'G':2,'H':3,'I':1,'J':1,'K':2,'L':2,'M':4,'N':3,'O':1,'P':2,'Q':2,'R':3,'S':1,'T':2,'U':1,'V':2,'W':4,'X':2,'Y':2,'Z':2
+};
+var LETTER_ELEMENTS={
+  'A':2,'B':4,'C':2,'D':4,'E':2,'F':3,'G':0,'H':3,'I':1,'J':1,'K':2,'L':3,'M':0,'N':4,'O':1,'P':2,'Q':0,'R':3,'S':1,'T':4,'U':1,'V':2,'W':3,'X':2,'Y':3,'Z':4
+};
+var EL_IDX=['wood','fire','earth','metal','water'];
+function renderNameTab(bazi,analysis){
+  var html='<div class="report-card"><h3><span class="icon">🔤</span> Name Analysis (姓名学)</h3>';
+  html+='<p>Your name carries vibrational energy. Enter your name to analyze its elemental composition and how it interacts with your Day Master.</p></div>';
+  html+='<div class="report-card"><div class="name-input-row"><input type="text" id="nameInput" placeholder="Enter your full name" maxlength="50"><button onclick="analyzeName()">Analyze</button></div><div id="nameResult"></div></div>';
+  return html;
+}
+function analyzeName(){
+  var name=document.getElementById('nameInput').value.trim().toUpperCase();
+  if(!name){alert('Please enter a name.');return}
+  var totalStrokes=0;
+  var elCount={wood:0,fire:0,earth:0,metal:0,water:0};
+  for(var i=0;i<name.length;i++){
+    var ch=name.charAt(i);
+    if(NAME_STROKES[ch]){
+      totalStrokes+=NAME_STROKES[ch];
+      var el=EL_IDX[LETTER_ELEMENTS[ch]];
+      elCount[el]++;
+    }
+  }
+  var totalLetters=name.replace(/[^A-Z]/g,'').length;
+  var dominantEl='wood';
+  var maxCount=0;
+  for(var k in elCount){if(elCount[k]>maxCount){maxCount=elCount[k];dominantEl=k}}
+  var dm=window._lastBazi.analysis.dayMaster;
+  var rel=getYearRelation(dm,dominantEl);
+  var relData=RELATION_DATA[rel]||RELATION_DATA.neutral;
+  var luckyNum=totalStrokes%9+1;
+  var html='<div class="name-result">';
+  html+='<div class="name-stat"><div class="ns-label">Total Strokes</div><div class="ns-value">'+totalStrokes+'</div></div>';
+  html+='<div class="name-stat"><div class="ns-label">Dominant Element</div><div class="ns-value">'+EL_ICON[dominantEl]+' '+EL_EN[dominantEl]+'</div></div>';
+  html+='<div class="name-stat"><div class="ns-label">Lucky Number</div><div class="ns-value">'+luckyNum+'</div></div>';
+  html+='<div class="name-stat"><div class="ns-label">Name Score</div><div class="ns-value" style="color:'+relData.color+'">'+(relData.scoreBase+Math.floor(Math.random()*relData.scoreRange))+'</div></div>';
+  html+='</div>';
+  html+='<div style="margin-top:1.5rem">';
+  html+='<h4 style="color:var(--gold-light);margin-bottom:.5rem">Elemental Breakdown</h4>';
+  for(var k in elCount){
+    var pct=totalLetters>0?Math.round(elCount[k]/totalLetters*100):0;
+    html+='<div class="compat-bar-item"><div class="compat-bar-label"><span>'+EL_ICON[k]+' '+EL_EN[k]+'</span><span>'+elCount[k]+' letters ('+pct+'%)</span></div><div class="compat-bar-track"><div class="compat-bar-fill" style="background:'+EL_COLOR[k]+';width:0" data-w="'+pct+'"></div></div></div>';
+  }
+  html+='</div>';
+  html+='<div style="margin-top:1.5rem;padding:1rem;background:rgba(212,175,55,.06);border-radius:10px;border:1px solid rgba(212,175,55,.15)">';
+  html+='<strong style="color:var(--gold-light)">Name Analysis:</strong> ';
+  if(rel==='favorable')html+='Your name\'s dominant element ('+EL_EN[dominantEl]+') nourishes your Day Master ('+EL_EN[dm]+'). This is an excellent match — your name supports your natural energy and amplifies your strengths.';
+  else if(rel==='wealth')html+='Your name\'s dominant element ('+EL_EN[dominantEl]+') represents your wealth element. This suggests your name attracts financial opportunities and material success.';
+  else if(rel==='power')html+='Your name\'s dominant element ('+EL_EN[dominantEl]+') challenges your Day Master. This creates internal tension that can drive growth but may also cause stress. Consider incorporating '+EL_EN[analysis.genCycle[dm]]+' energy to harmonize.';
+  else if(rel==='same')html+='Your name\'s dominant element ('+EL_EN[dominantEl]+') mirrors your Day Master. This amplifies your natural traits — both strengths and weaknesses. Balance with complementary elements is recommended.';
+  else html+='Your name\'s dominant element ('+EL_EN[dominantEl]+') has a neutral relationship with your Day Master. Your name neither strongly supports nor challenges your core energy.';
+  html+='</div>';
+  document.getElementById('nameResult').innerHTML=html;
+  setTimeout(function(){document.querySelectorAll('#nameResult .compat-bar-fill').forEach(function(b){b.style.width=b.dataset.w+'%'})},200);
+}
+
+// ===== MBTI × BAZI =====
+var BAZI_TO_MBTI={
+  wood:{yang:{type:'ENFJ',label:'The Protagonist',desc:'Your Yang Wood energy aligns with the ENFJ archetype — a natural leader who nurtures growth in others. You combine the tree\'s upward reach with charisma and warmth, inspiring people to become their best selves.'},yin:{type:'INFP',label:'The Mediator',desc:'Your Yin Wood energy resonates with the INFP — gentle, creative, and deeply idealistic. Like a flexible vine, you adapt while staying true to your core values. Your imagination knows no bounds.'}},
+  fire:{yang:{type:'ENTP',label:'The Debater',desc:'Your Yang Fire energy matches the ENTP — bold, innovative, and endlessly curious. You\'re a spark that ignites change, thriving on intellectual challenges and creative destruction.'},yin:{type:'ESFP',label:'The Entertainer',desc:'Your Yin Fire energy aligns with the ESFP — warm, spontaneous, and magnetic. You light up every room with your presence, living fully in the moment and bringing joy to others.'}},
+  earth:{yang:{type:'ESTJ',label:'The Executive',desc:'Your Yang Earth energy resonates with the ESTJ — organized, dependable, and tradition-oriented. Like a mountain, you provide structure and stability. You build systems that last.'},yin:{type:'ISFJ',label:'The Defender',desc:'Your Yin Earth energy matches the ISFJ — nurturing, protective, and deeply loyal. You are the foundation others build upon, offering quiet strength and unwavering support.'}},
+  metal:{yang:{type:'INTJ',label:'The Architect',desc:'Your Yang Metal energy aligns with the INTJ — strategic, precise, and relentlessly logical. Like a forged blade, you cut through complexity with clarity of vision and uncompromising standards.'},yin:{type:'ISTP',label:'The Virtuoso',desc:'Your Yin Metal energy resonates with the ISTP — sharp, practical, and masterfully skilled. You refine your craft with quiet dedication, excelling in precision and technique.'}},
+  water:{yang:{type:'ENTJ',label:'The Commander',desc:'Your Yang Water energy matches the ENTJ — powerful, strategic, and commanding. Like a great river, you carve your path through any landscape, combining depth of thought with force of will.'},yin:{type:'INFJ',label:'The Advocate',desc:'Your Yin Water energy aligns with the INFJ — profound, intuitive, and visionary. Your depths hold wisdom few can fathom. You understand others on a level beyond words.'}}
+};
+function renderMBTITab(bazi,analysis){
+  var yin=bazi.day.stem.yin;
+  var mbti=BAZI_TO_MBTI[analysis.dayMaster][yin];
+  var html='<div class="report-card"><h3><span class="icon">🧬</span> MBTI × Bazi Cross-Analysis</h3>';
+  html+='<p>Where East meets West: your Bazi Day Master energy mapped to the Myers-Briggs personality framework. This cross-cultural analysis reveals how your elemental nature expresses through modern personality psychology.</p></div>';
+  html+='<div class="report-card"><div class="mbti-grid">';
+  html+='<div class="mbti-card"><div class="mbti-type">'+EL_ICON[analysis.dayMaster]+'</div><div class="mbti-label">Bazi Day Master</div><div style="font-size:.85rem;color:var(--text);margin-top:.3rem">'+bazi.day.stem.enEl+'</div></div>';
+  html+='<div class="mbti-card"><div class="mbti-type">'+mbti.type+'</div><div class="mbti-label">MBTI Type</div><div style="font-size:.85rem;color:var(--text);margin-top:.3rem">'+mbti.label+'</div></div>';
+  html+='</div>';
+  html+='<p class="mbti-desc">'+mbti.desc+'</p>';
+  html+='<div style="margin-top:1.5rem"><h4 style="color:var(--gold-light);margin-bottom:.5rem">Why This Mapping Works</h4>';
+  html+='<p style="font-size:.85rem;color:var(--text-dim);line-height:1.7">The five elements of Bazi (Wood, Fire, Earth, Metal, Water) each carry distinct personality archetypes that closely parallel the 16 MBTI types. Your Day Master\'s Yin/Yang polarity further refines the mapping:</p>';
+  html+='<ul style="list-style:none;padding:0;margin-top:.5rem;font-size:.82rem;color:var(--text-dim);line-height:1.8">';
+  html+='<li>🌿 <strong style="color:var(--text)">Wood</strong> → NF types (growth, idealism, nurturing)</li>';
+  html+='<li>🔥 <strong style="color:var(--text)">Fire</strong> → SP/NP types (passion, spontaneity, charisma)</li>';
+  html+='<li>🏔️ <strong style="color:var(--text)">Earth</strong> → SJ types (stability, duty, tradition)</li>';
+  html+='<li>⚔️ <strong style="color:var(--text)">Metal</strong> → NT/SP types (precision, logic, craft)</li>';
+  html+='<li>🌊 <strong style="color:var(--text)">Water</strong> → NF/NT types (depth, intuition, strategy)</li>';
+  html+='</ul></div>';
+  html+='</div>';
+  return html;
+}
+
+// ===== PDF EXPORT =====
+function exportPDF(){
+  var plan=USER_PLAN;
+  if(plan==='free'){
+    showUpgrade();
+    return;
+  }
+  // Open print dialog with all tabs visible
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.add('active')});
+  document.querySelectorAll('.locked-content .lock-overlay').forEach(function(o){o.style.display='none'});
+  setTimeout(function(){
+    window.print();
+    // Restore (only active tab stays)
+    setTimeout(function(){
+      var activeBtn=document.querySelector('.tab-btn.active');
+      if(activeBtn){
+        var activeTab=activeBtn.dataset.tab;
+        document.querySelectorAll('.tab-content').forEach(function(c){
+          if(c.dataset.tab!==activeTab)c.classList.remove('active');
+        });
+      }
+    },500);
+  },100);
+}
+
 // ===== STARFIELD BACKGROUND =====
+// Initialize plan state for returning users
+if(USER_PLAN!=='free'){
+  document.querySelectorAll('.tab-btn.locked').forEach(function(b){
+    b.classList.remove('locked');
+    var badge=b.querySelector('.premium-badge');
+    if(badge){
+      if(USER_PLAN==='pro'){badge.textContent='Pro';badge.style.background='linear-gradient(135deg,#9C27B0,#6a4c93)';badge.style.color='#fff'}
+      else{badge.textContent='Premium'}
+    }
+  });
+}
+// Close modals on backdrop click
+document.querySelectorAll('.upgrade-modal,.privacy-modal').forEach(function(m){
+  m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('show')});
+});
+
 const canvas=document.getElementById('stars');
 const ctx=canvas.getContext('2d');
 let stars=[];
