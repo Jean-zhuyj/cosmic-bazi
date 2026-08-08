@@ -42,7 +42,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 @keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(212,175,55,.2),inset 0 0 20px rgba(212,175,55,.1);border-color:rgba(212,175,55,.2)}50%{box-shadow:0 0 50px rgba(212,175,55,.4),inset 0 0 40px rgba(212,175,55,.15);border-color:rgba(212,175,55,.4)}}
 
 /* Yin-Yang center */
-.yinyang{position:relative;width:130px;height:130px;animation:yinyangSpin 12s linear infinite,zoomIn 1.5s ease}
+.bagua-classic-img{position:relative;z-index:2;width:280px;height:280px;object-fit:contain;animation:baguaSpin 30s linear infinite;filter:drop-shadow(0 0 20px rgba(212,175,55,.3))}
 .yinyang-svg{width:100%;height:100%;filter:drop-shadow(0 0 25px rgba(212,175,55,.5))}
 
 @keyframes yinyangSpin{to{transform:rotate(360deg)}}
@@ -64,7 +64,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 
 @media(max-width:480px){
   .bagua-container{width:260px;height:260px}
-  .yinyang{width:100px;height:100px}
+  .bagua-classic-img{width:210px;height:210px}
   .splash-title{font-size:1.6rem}
   .bagua-trigram{font-size:1.2rem}
   .bagua-ring-mid .bagua-trigram{font-size:1rem}
@@ -393,48 +393,10 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 <!-- ===== SPLASH SCREEN ===== -->
 <div class="splash-screen" id="splashScreen">
   <div class="bagua-container">
-    <!-- Outer trigrams ring -->
-    <div class="bagua-ring" id="baguaRing">
-      <div class="bagua-trigram" style="top:0;left:50%;transform:translateX(-50%)">☰</div>
-      <div class="bagua-trigram" style="top:15%;right:0;transform:translateY(-50%)">☱</div>
-      <div class="bagua-trigram" style="top:50%;right:-15px;transform:translateY(-50%)">☲</div>
-      <div class="bagua-trigram" style="bottom:15%;right:0;transform:translateY(50%)">☳</div>
-      <div class="bagua-trigram" style="bottom:0;left:50%;transform:translateX(-50%)">☴</div>
-      <div class="bagua-trigram" style="bottom:15%;left:0;transform:translateY(50%)">☵</div>
-      <div class="bagua-trigram" style="top:50%;left:-15px;transform:translateY(-50%)">☶</div>
-      <div class="bagua-trigram" style="top:15%;left:0;transform:translateY(-50%)">☷</div>
-    </div>
-    <!-- Mid trigrams ring -->
-    <div class="bagua-ring-mid">
-      <div class="bagua-trigram" style="top:0;left:50%;transform:translateX(-50%)">☰</div>
-      <div class="bagua-trigram" style="top:50%;right:-10px;transform:translateY(-50%)">☲</div>
-      <div class="bagua-trigram" style="bottom:0;left:50%;transform:translateX(-50%)">☵</div>
-      <div class="bagua-trigram" style="top:50%;left:-10px;transform:translateY(-50%)">☶</div>
-    </div>
-    <!-- Glow ring -->
+    <!-- Classic Bagua Image -->
+    <img class="bagua-classic-img" src="bagua-classic.png" alt="Bagua">
+    <!-- Glow overlay -->
     <div class="bagua-glow-ring"></div>
-    <!-- Yin-Yang center -->
-    <div class="yinyang">
-      <svg class="yinyang-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="yangGrad" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="#f5f5f5"/>
-            <stop offset="100%" stop-color="#e0e0e0"/>
-          </radialGradient>
-          <radialGradient id="yinGrad" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="#1a1a2e"/>
-            <stop offset="100%" stop-color="#0a0a1a"/>
-          </radialGradient>
-        </defs>
-        <circle cx="100" cy="100" r="98" fill="none" stroke="#d4af37" stroke-width="2"/>
-        <path d="M100,2 A98,98 0 0,1 100,198 A49,49 0 0,1 100,100 A49,49 0 0,0 100,2 Z" fill="url(#yangGrad)"/>
-        <path d="M100,198 A98,98 0 0,1 100,2 A49,49 0 0,1 100,100 A49,49 0 0,0 100,198 Z" fill="url(#yinGrad)"/>
-        <circle cx="100" cy="51" r="24" fill="#000000" shape-rendering="crispEdges"/>
-        <circle cx="100" cy="51" r="8" fill="#ffffff" opacity="0.95"/>
-        <circle cx="100" cy="149" r="24" fill="#ffffff" shape-rendering="crispEdges"/>
-        <circle cx="100" cy="149" r="8" fill="#000000" opacity="0.9"/>
-      </svg>
-    </div>
   </div>
   <h1 class="splash-title">Cosmic Destiny</h1>
   <p class="splash-subtitle">Unlock the Secrets of Your Fate</p>
