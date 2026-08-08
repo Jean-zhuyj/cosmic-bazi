@@ -226,9 +226,15 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
   .score-section{flex-direction:column;text-align:center;align-items:center}
 }
 /* ===== PREMIUM / PAYWALL ===== */
-.premium-badge{display:inline-block;font-size:.6rem;padding:.15rem .4rem;border-radius:6px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a1a;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:.3rem;vertical-align:middle}
+.premium-badge{display:inline-block;font-size:.6rem;padding:.15rem .4rem;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:.3rem;vertical-align:middle}
+.premium-badge.badge-prem{background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a1a}
+.premium-badge.badge-pro{background:linear-gradient(135deg,#9C27B0,#7B1FA2);color:#fff}
 .tab-btn.locked{opacity:.6}
 .tab-btn.locked::after{content:'🔒';font-size:.7rem;margin-left:.3rem}
+.tab-btn.locked.prem-tier.unlocked{opacity:1}
+.tab-btn.locked.prem-tier.unlocked::after{content:'✓';color:#FFD700}
+.tab-btn.locked.pro-tier.unlocked{opacity:1}
+.tab-btn.locked.pro-tier.unlocked::after{content:'✓';color:#9C27B0}
 .locked-content{position:relative;overflow:hidden;min-height:200px}
 .locked-content .lock-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,26,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;border-radius:20px;text-align:center;padding:2rem}
 .lock-overlay .lock-icon{font-size:2.5rem;margin-bottom:1rem;filter:drop-shadow(0 0 10px var(--gold-dim))}
@@ -248,6 +254,8 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 .pricing-tier:hover{border-color:var(--gold);transform:translateY(-3px)}
 .pricing-tier.popular{border-color:var(--gold);background:rgba(212,175,55,.08)}
 .pricing-tier .tier-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#1a1a1a;font-size:.6rem;padding:.2rem .8rem;border-radius:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.pricing-tier.highlight-tier{box-shadow:0 0 25px rgba(212,175,55,.5),0 0 60px rgba(212,175,55,.2);animation:tierPulse 1.2s ease-in-out infinite}
+@keyframes tierPulse{0%,100%{box-shadow:0 0 20px rgba(212,175,55,.4)}50%{box-shadow:0 0 35px rgba(212,175,55,.7),0 0 70px rgba(212,175,55,.3)}}
 .pricing-tier .tier-name{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-light);margin-bottom:.3rem}
 .pricing-tier .tier-price{font-size:1.8rem;font-weight:700;color:var(--text-bright);margin-bottom:.2rem}
 .pricing-tier .tier-period{font-size:.75rem;color:var(--text-dim);margin-bottom:1rem}
@@ -534,12 +542,12 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <button class="tab-btn" data-tab="health">Wellness</button>
     <button class="tab-btn" data-tab="lucky">Lucky Elements</button>
     <button class="tab-btn" data-tab="yearly">Yearly Fortune</button>
-    <button class="tab-btn locked" data-tab="dayun">Da Yun <span class="premium-badge">Pro</span></button>
-    <button class="tab-btn locked" data-tab="monthly">Monthly <span class="premium-badge">Pro</span></button>
-    <button class="tab-btn locked" data-tab="compat">Soulmate Match <span class="premium-badge">Pro</span></button>
-    <button class="tab-btn locked" data-tab="dateselect">Auspicious Dates <span class="premium-badge">Pro</span></button>
-    <button class="tab-btn locked" data-tab="name">Name Analysis <span class="premium-badge">Pro</span></button>
-    <button class="tab-btn locked" data-tab="mbti">MBTI × Bazi <span class="premium-badge">Pro</span></button>
+    <button class="tab-btn locked prem-tier" data-tab="dayun">Da Yun <span class="premium-badge badge-prem">Premium</span></button>
+    <button class="tab-btn locked prem-tier" data-tab="monthly">Monthly <span class="premium-badge badge-prem">Premium</span></button>
+    <button class="tab-btn locked pro-tier" data-tab="compat">Soulmate Match <span class="premium-badge badge-pro">Pro</span></button>
+    <button class="tab-btn locked pro-tier" data-tab="dateselect">Auspicious Dates <span class="premium-badge badge-pro">Pro</span></button>
+    <button class="tab-btn locked pro-tier" data-tab="name">Name Analysis <span class="premium-badge badge-pro">Pro</span></button>
+    <button class="tab-btn locked pro-tier" data-tab="mbti">MBTI × Bazi <span class="premium-badge badge-pro">Pro</span></button>
   </div>
 
   <!-- Tab Contents -->
@@ -564,7 +572,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <h2>Unlock Your Full Destiny</h2>
     <p class="upgrade-sub">Choose a plan to access premium features</p>
     <div class="pricing-grid">
-      <div class="pricing-tier">
+      <div class="pricing-tier premium-card">
         <div class="tier-name">Premium</div>
         <div class="tier-price">$9.99</div>
         <div class="tier-period">one-time payment</div>
@@ -577,7 +585,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
         </ul>
         <button class="btn-upgrade-select" onclick="initiatePayment('premium')">Get Premium</button>
       </div>
-      <div class="pricing-tier popular">
+      <div class="pricing-tier popular pro-card">
         <div class="tier-badge">Best Value</div>
         <div class="tier-name">Pro</div>
         <div class="tier-price">$19.99</div>
@@ -608,7 +616,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
     <h3>Data Storage</h3>
     <p>Your reading results are stored locally in your browser's localStorage. Clearing your browser data will remove all saved information. We do not use cookies for tracking.</p>
     <h3>Third-Party Services</h3>
-    <p>This app does not share your data with any third party. Payment processing is handled by Lemon Squeezy (our Merchant of Record), which acts as the legal seller and has its own privacy policy. Lemon Squeezy collects billing information necessary to process your order and comply with global tax regulations.</p>
+    <p>This app does not share your data with any third party. Payment processing is handled by PayPal, which has its own privacy policy.</p>
     <h3>Your Rights</h3>
     <p>You have the right to access, correct, or delete your data at any time by clearing your browser storage. For GDPR/CCPA inquiries, contact us at the email below.</p>
     <h3>Contact</h3>
@@ -1260,27 +1268,27 @@ function renderReport(bazi,analysis,name,gender){
     ${renderYearlyFortune(bazi,analysis)}
     <!-- Da Yun (Pro) -->
     <div class="tab-content" data-tab="dayun">
-      ${isPremium('dayun')?renderDaYun(bazi,analysis,gender):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🔒</div><h4>Da Yun — Ten-Year Life Cycles</h4><p>Unlock the power of Da Yun analysis to see your 10-year life cycles. Discover which decades bring opportunity, challenge, and transformation.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Premium</button></div></div>'}
+      ${isPremium('dayun')?renderDaYun(bazi,analysis,gender):'<div class="locked-content"><div class="lock-overlay prem-lock"><div class="lock-icon">🔒</div><h4>Da Yun — Ten-Year Life Cycles</h4><p>Unlock the power of Da Yun analysis to see your 10-year life cycles. Discover which decades bring opportunity, challenge, and transformation.</p><button class="btn-unlock" onclick="showUpgradeWithTier(\'premium\')">Unlock with Premium — $9.99</button></div></div>'}
     </div>
-    <!-- Monthly Calendar (Pro) -->
+    <!-- Monthly Calendar (Premium) -->
     <div class="tab-content" data-tab="monthly">
-      ${isPremium('monthly')?renderMonthlyTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">📅</div><h4>Monthly Fortune Calendar</h4><p>Get day-by-day fortune predictions for every month. Know your auspicious and inauspicious days at a glance.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Premium</button></div></div>'}
+      ${isPremium('monthly')?renderMonthlyTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay prem-lock"><div class="lock-icon">📅</div><h4>Monthly Fortune Calendar</h4><p>Get day-by-day fortune predictions for every month. Know your auspicious and inauspicious days at a glance.</p><button class="btn-unlock" onclick="showUpgradeWithTier(\'premium\')">Unlock with Premium — $9.99</button></div></div>'}
     </div>
     <!-- Compatibility (Pro) -->
     <div class="tab-content" data-tab="compat">
-      ${isPremium('compat')?renderCompatTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">💞</div><h4>Soulmate Compatibility Match</h4><p>Enter your partner\'s birth data to discover your elemental compatibility, relationship dynamics, and personalized love advice.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+      ${isPremium('compat')?renderCompatTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay pro-lock"><div class="lock-icon">💞</div><h4>Soulmate Compatibility Match</h4><p>Enter your partner\'s birth data to discover your elemental compatibility, relationship dynamics, and personalized love advice.</p><button class="btn-unlock" onclick="showUpgradeWithTier(\'pro\')">Unlock with Pro — $19.99</button></div></div>'}
     </div>
     <!-- Date Selection (Pro) -->
     <div class="tab-content" data-tab="dateselect">
-      ${isPremium('dateselect')?renderDateSelectTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🎯</div><h4>Auspicious Date Selection</h4><p>Find the perfect dates for weddings, moving, business openings, and important events based on your personal energy.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+      ${isPremium('dateselect')?renderDateSelectTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay pro-lock"><div class="lock-icon">🎯</div><h4>Auspicious Date Selection</h4><p>Find the perfect dates for weddings, moving, business openings, and important events based on your personal energy.</p><button class="btn-unlock" onclick="showUpgradeWithTier(\'pro\')">Unlock with Pro — $19.99</button></div></div>'}
     </div>
     <!-- Name Analysis (Pro) -->
     <div class="tab-content" data-tab="name">
-      ${isPremium('name')?renderNameTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🔤</div><h4>Name Analysis (姓名学)</h4><p>Discover the hidden elemental energy in your name. See how your name interacts with your Bazi Day Master.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+      ${isPremium('name')?renderNameTab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay pro-lock"><div class="lock-icon">🔤</div><h4>Name Analysis (姓名学)</h4><p>Discover the hidden elemental energy in your name. See how your name interacts with your Bazi Day Master.</p><button class="btn-unlock" onclick="showUpgradeWithTier(\'pro\')">Unlock with Pro — $19.99</button></div></div>'}
     </div>
     <!-- MBTI × Bazi (Pro) -->
     <div class="tab-content" data-tab="mbti">
-      ${isPremium('mbti')?renderMBTITab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay"><div class="lock-icon">🧬</div><h4>MBTI × Bazi Cross-Analysis</h4><p>Where East meets West — discover your MBTI personality type through the lens of Chinese Five Element theory.</p><button class="btn-unlock" onclick="showUpgrade()">Unlock with Pro</button></div></div>'}
+      ${isPremium('mbti')?renderMBTITab(bazi,analysis):'<div class="locked-content"><div class="lock-overlay pro-lock"><div class="lock-icon">🧬</div><h4>MBTI × Bazi Cross-Analysis</h4><p>Where East meets West — discover your MBTI personality type through the lens of Chinese Five Element theory.</p><button class="btn-unlock" onclick="showUpgradeWithTier(\'pro\')">Unlock with Pro — $19.99</button></div></div>'}
     </div>
   `;
 
@@ -1305,7 +1313,9 @@ document.addEventListener('click',e=>{
     var tab=btn.dataset.tab;
     // Check if locked
     if(btn.classList.contains('locked')){
-      showUpgrade();
+      // Premium-tier tabs → 引导升级 Premium / Pro-tier → 引导升级 Pro
+      if(btn.classList.contains('pro-tier')) showUpgradeWithTier('pro');
+      else showUpgradeWithTier('premium');
       return;
     }
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -1453,32 +1463,46 @@ function restoreFormAndRender(){
 // ===== PREMIUM / PAYWALL SYSTEM =====
 var USER_PLAN=(function(){try{return localStorage.getItem('cd_plan')||'free'}catch(e){return 'free'}})();
 function isPremium(feature){
-  var proFeatures=['dayun','monthly','compat','dateselect','name','mbti'];
+  var proFeatures=['compat','dateselect','name','mbti']; // Pro 专属
+  var premFeatures=['dayun','monthly'];                   // Premium 可解锁
   if(USER_PLAN==='pro') return true;
-  if(USER_PLAN==='premium' && proFeatures.indexOf(feature)===-1) return true;
-  // premium gets dayun, monthly, pdf
-  if(USER_PLAN==='premium' && (feature==='dayun'||feature==='monthly')) return true;
+  if(USER_PLAN==='premium' && premFeatures.indexOf(feature)>=0) return true;
   return false;
 }
 function unlockPremium(plan){
   USER_PLAN=plan;
   try{localStorage.setItem('cd_plan',plan)}catch(e){}
   closeModal('upgradeModal');
-  // Remove locked badges
+
+  // Premium: 只解锁 Premium 标签（dayun, monthly）
+  // Pro: 解锁全部标签
+  var tierClass = plan==='pro' ? '.pro-tier' : '.prem-tier';
   document.querySelectorAll('.tab-btn.locked').forEach(function(b){
-    b.classList.remove('locked');
-    var badge=b.querySelector('.premium-badge');
-    if(badge){
-      if(plan==='pro'){badge.textContent='Pro';badge.style.background='linear-gradient(135deg,#9C27B0,#6a4c93)';badge.style.color='#fff'}
-      else{badge.textContent='Premium';}
+    if(plan==='pro' || b.classList.contains('prem-tier')){
+      b.classList.remove('locked');
+      b.classList.add('unlocked');
+      var badge=b.querySelector('.premium-badge');
+      if(badge && plan==='pro'){badge.textContent='Pro';badge.className='premium-badge badge-pro'}
+      else if(badge){badge.textContent='Premium';badge.className='premium-badge badge-prem'}
     }
   });
+
   // Re-render report to unlock content
   if(window._lastBazi){
     renderReport(window._lastBazi.bazi,window._lastBazi.analysis,window._lastBazi.name);
   }
 }
-function showUpgrade(){document.getElementById('upgradeModal').classList.add('show')}
+function showUpgrade(){document.getElementById('upgradeModal').classList.add('show');resetTierHighlight()}
+function showUpgradeWithTier(tier){
+  document.getElementById('upgradeModal').classList.add('show');
+  // 高亮对应等级卡片
+  document.querySelectorAll('.pricing-tier').forEach(function(t){t.classList.remove('highlight-tier')});
+  var target=document.querySelector('.pricing-tier.'+tier+'-card');
+  if(target) target.classList.add('highlight-tier');
+}
+function resetTierHighlight(){
+  document.querySelectorAll('.pricing-tier').forEach(function(t){t.classList.remove('highlight-tier')});
+}
 function showPrivacy(){document.getElementById('privacyModal').classList.add('show')}
 function showTerms(){document.getElementById('termsModal').classList.add('show')}
 function closeModal(id){document.getElementById(id).classList.remove('show')}
