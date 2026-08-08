@@ -593,7 +593,7 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
         <button class="btn-upgrade-select" onclick="initiatePayment('pro')">Get Pro</button>
       </div>
     </div>
-    <p class="payment-note">🔒 Secure payment via Lemon Squeezy · Instant access · 30-day money-back guarantee<br>Taxes (VAT/GST) automatically calculated at checkout based on your country.</p>
+    <p class="payment-note">🔒 Secure payment via PayPal · Instant access · 30-day money-back guarantee<br>You will be redirected to PayPal to complete your purchase safely.</p>
   </div>
 </div>
 
@@ -1365,20 +1365,16 @@ function resetApp(){
 }
 
 // ===== PAYMENT CONFIG (Lemon Squeezy — MoR) =====
-// 接入步骤（注册 Lemon Squeezy 后）：
-// 1. 在 Lemon Squeezy 后台创建两个产品/变体：Premium $9.99、Pro $19.99
-// 2. 每个变体都有 "Checkout URL"，复制后填到下面 premiumUrl / proUrl
-// 3. 把 enabled 改为 true
-// 4.（可选安全验证）部署 verify-checkout.js 到 Cloudflare Workers，把地址填到 verifyUrl
+// 支付配置 — PayPal 真实收款
+// 如需修改价格/链接，修改下面两个 URL 后重新部署即可
 var PAYMENT_CONFIG={
-  enabled:false,                 // 填好链接后改为 true 启用真实支付
-  provider:'Lemon Squeezy',
-  premiumUrl:'',                 // 例: https://yourstore.lemonsqueezy.com/checkout/buy/xxxxxxxx-xxxx
-  proUrl:'',                     // 例: https://yourstore.lemonsqueezy.com/checkout/buy/yyyyyyyy-yyyy
-  verifyUrl:''                   // 例: https://bazi-verify.workers.dev  (留空=仅前端验证)
+  enabled:true,                  // true = 真实支付已启用
+  provider:'PayPal',
+  premiumUrl:'https://www.paypal.com/ncp/payment/GUTZYVX237M64',   // Cosmic Bazi Premium $9.99
+  proUrl:'https://www.paypal.com/ncp/payment/E2SBY3UT8JJQ4'        // Cosmic Bazi Pro $19.99
 };
 
-// 发起支付：跳转到 Lemon Squeezy 托管结账页
+// 发起支付：跳转到 PayPal 结账页
 function initiatePayment(plan){
   // 支付前保存当前表单，回跳后可无缝恢复
   try{
@@ -1390,54 +1386,52 @@ function initiatePayment(plan){
     localStorage.setItem('cd_pending_plan',plan);
   }catch(e){}
 
-  var baseUrl=plan==='premium'?PAYMENT_CONFIG.premiumUrl:PAYMENT_CONFIG.proUrl;
-  // 未配置 → 回退到演示模式（模拟解锁，站点照常可用）
-  if(!PAYMENT_CONFIG.enabled||!baseUrl){
-    alert('Payment is not configured yet.\n\nThis site is running in DEMO mode — your unlock will be simulated.\n\nTo enable real payments via Lemon Squeezy, fill in PAYMENT_CONFIG at the top of the script (premiumUrl / proUrl) and set enabled=true.');
+  var payUrl=plan==='premium'?PAYMENT_CONFIG.premiumUrl:PAYMENT_CONFIG.proUrl;
+  if(!PAYMENT_CONFIG.enabled||!payUrl){
+    alert('Payment is not configured yet.\n\nThis site is running in DEMO mode.');
     unlockPremium(plan);
-    alert(plan==='pro'?'🎉 Pro unlocked (demo)! All features are now available.':'🎉 Premium unlocked (demo)! Da Yun and Monthly features are now available.');
     return;
   }
-  // 构造回跳地址（付款成功后跳回本页并带参数）
-  var returnUrl=location.origin+location.pathname+'?payment=success&plan='+plan;
-  var sep=baseUrl.indexOf('?')>=0?'&':'?';
-  // Lemon Squeezy 用 checkout[success_url] 指定成功跳转地址
-  var checkoutUrl=baseUrl+sep+'checkout[success_url]='+encodeURIComponent(returnUrl);
-  window.location.href=checkoutUrl;
+  // 跳转到 PayPal 支付（建议在 PayPal 后台开启 Auto Return）
+  window.open(payUrl,'_blank');
+  // 提示用户支付完成后返回本页点「Verify Payment」按钮
+  showPaymentTip();
 }
 
-// 回跳处理：检测付款成功参数 → 解锁 → 恢复表单
+// 支付后提示：引导用户返回页面验证解锁
+function showPaymentTip(){
+  var tip=document.createElement('div');
+  tip.id='paymentTip';
+  tip.innerHTML='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center"><div style="background:#1a1a2e;border:2px solid #d4af37;border-radius:16px;padding:30px;max-width:400px;text-align:center;color:#e0d5c1"><h3 style="color:#d4af37;margin:0 0 12px">🔮 Payment In Progress</h3><p style="margin:0 0 16px;line-height:1.6">Complete your payment in the PayPal window.<br>After paying, return here and click:</p><button onclick="closePaymentTip();verifyPaymentReturn()" style="background:linear-gradient(135deg,#d4af37,#c49b2a);color:#1a1a2e;border:none;padding:12px 28px;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer">✅ I\'ve Paid — Unlock Now</button><p style="font-size:12px;color:#888;margin:12px 0 0">Didn\'t pay yet? <a href="javascript:closePaymentTip()" style="color:#d4af37">Go back</a></p></div></div>';
+  document.body.appendChild(tip);
+}
+
+function closePaymentTip(){
+  var tip=document.getElementById('paymentTip');
+  if(tip) tip.remove();
+}
+
+function verifyPaymentReturn(){
+  // 从 localStorage 恢复计划并解锁
+  var plan=localStorage.getItem('cd_pending_plan')||'premium';
+  unlockPremium(plan);
+  alert(plan==='pro'?'🎉 Thank you! Pro features are now unlocked. Enjoy all premium tools!':'🎉 Thank you! Premium features are now unlocked. Explore Da Yun and Monthly Calendar!');
+}
+
+// 回跳处理：检测付款成功参数（PayPal Auto Return 回跳使用）
 function handlePaymentReturn(){
   var params=new URLSearchParams(location.search);
   if(params.get('payment')!=='success') return;
   var plan=params.get('plan');
-  if(plan!=='premium'&&plan!=='pro'){ history.replaceState({},document.title,location.pathname); return; }
-
-  var checkoutId=params.get('checkout_id')||params.get('order_id')||params.get('reference')||'';
-
-  var doUnlock=function(){
-    unlockPremium(plan);
-    try{localStorage.removeItem('cd_pending_plan')}catch(e){}
-    // 清理 URL 参数
-    history.replaceState({},document.title,location.pathname);
-    // 恢复表单并自动重新生成报告
-    restoreFormAndRender();
-    // 弹出成功提示
-    setTimeout(function(){
-      alert(plan==='pro'?'🎉 Payment successful! Pro unlocked — all features are now available.':
-                         '🎉 Payment successful! Premium unlocked — Da Yun and Monthly features are now available.');
-    },3200);
-  };
-
-  if(PAYMENT_CONFIG.verifyUrl&&checkoutId){
-    // 服务端验证（推荐生产环境使用）
-    fetch(PAYMENT_CONFIG.verifyUrl+'?checkout_id='+encodeURIComponent(checkoutId)+'&plan='+plan)
-      .then(function(r){return r.json()})
-      .then(function(d){ if(d.valid){doUnlock()}else{alert('Payment verification failed. Please contact support with your order ID: '+checkoutId)} })
-      .catch(function(){ doUnlock() }); // 验证服务异常时降级为信任回跳
-  }else{
-    doUnlock(); // 仅前端验证（适合早期，建议后续加 verifyUrl）
-  }
+  if(plan!=='premium'&&plan!=='pro'){ return; }
+  unlockPremium(plan);
+  try{localStorage.removeItem('cd_pending_plan')}catch(e){}
+  history.replaceState({},document.title,location.pathname);
+  restoreFormAndRender();
+  setTimeout(function(){
+    alert(plan==='pro'?'🎉 Payment successful! Pro unlocked — all features are now available.':
+                       '🎉 Payment successful! Premium unlocked — Da Yun and Monthly features are now available.');
+  },3200);
 }
 
 // 恢复支付前保存的表单并重新生成报告
@@ -1880,7 +1874,7 @@ document.querySelectorAll('.upgrade-modal,.privacy-modal').forEach(function(m){
   m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('show')});
 });
 
-// Handle return from payment provider (Lemon Squeezy success redirect)
+// Handle return from PayPal (Auto Return) or manual unlock
 handlePaymentReturn();
 
 const canvas=document.getElementById('stars');
